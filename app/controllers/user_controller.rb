@@ -58,6 +58,7 @@ class UserController < ApplicationController
     end
 
     def deleteUser
+        @current_user.avatar.purge
         if @current_user.destroy
             render :json=>{message:"user deleted successfully"}, status: :ok
         else
