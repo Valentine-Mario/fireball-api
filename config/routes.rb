@@ -8,6 +8,7 @@ Rails.application.routes.draw do
     get '/removepics', :to=>'user#removePics'
     post '/editpasssword', :to=>'user#editPassword'
     get '/delete', :to=>'user#deleteUser'
+    post '/edit', :to=>'user#editUser'
   end
 
 

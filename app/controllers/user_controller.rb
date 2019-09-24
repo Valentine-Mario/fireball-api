@@ -1,7 +1,7 @@
 class UserController < ApplicationController
     include Rails.application.routes.url_helpers
     before_action :authorize_request, only: [:getProfile, :addPics, :removePics, 
-        :editPassword, :deleteUser]
+        :editPassword, :deleteUser, :editUser]
     def createUser
         @new_user=User.new(user_params)
         if @new_user.save
@@ -15,7 +15,7 @@ class UserController < ApplicationController
 
     def getProfile
         if @current_user.suspended==true
-            render :json=>{code:"01", message:"your account has been suspended"}, status: :ok
+            render :json=>{code:"01", message:"your account has been suspended"}, status: :unauthorized
         else
             pics= rails_blob_url(@current_user.avatar)
             render :json=>{code:"00", message:@current_user, pics:pics}, status: :ok
@@ -30,7 +30,7 @@ class UserController < ApplicationController
                 render :json=>{code:"01", message:"error uploading picture"}, status: :unprocessable_entity
             end
         else
-            render :json=>{code:"01", message:"account suspended"}, status: :ok
+            render :json=>{code:"01", message:"account suspended"}, status: :unauthorized
         end
     end
 
@@ -39,7 +39,7 @@ class UserController < ApplicationController
             @current_user.avatar.attach(io: File.open(Rails.root.join("app", "assets", "images", "default.png")), filename: 'default.png' , content_type: "image/png")
             render :json=>{code:"00", message:"profile pics removed successfully"}
         else
-            render :json=>{code:"01", message:"account suspended"}, status: :ok
+            render :json=>{code:"01", message:"account suspended"}, status: :authorization
         end
     end
 
@@ -66,11 +66,30 @@ class UserController < ApplicationController
         end
     end
 
+    def editUser
+        if @current_user.suspended==false
+            if @current_user.update(edit_params)
+                render :json=>{code:"00", message:"update successful"}, status: :ok
+            else
+                render :json=>{code:"01", message:@current_user.errors}, status: :unprocessable_entity
+            end
+        else
+            render :json=>{code:"01", message:"account suspended"}, status: :unauthorized
+        end
+    end
+
 private
 def user_params
         
     params.permit(
        :name, :email, :password, :password_confirmation, :isAdmin, :suspended
+      )
+end
+
+def edit_params
+        
+    params.permit(
+       :name, :email
       )
 end
 

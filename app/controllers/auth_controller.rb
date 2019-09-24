@@ -4,7 +4,7 @@ class AuthController < ApplicationController
         if @user == nil
             render :json=>{code:"01", message:"email dosen't exist"}, status: :unauthorized
        elsif @user.suspended == true
-            render :json =>{code:"01", message:"your account has been suspended"}, status: :ok
+            render :json =>{code:"01", message:"your account has been suspended"}, status: :unauthorized
         elsif @user&.authenticate(params[:password])
           token = JsonWebToken.encode(user_id: @user.id)
           render :json=> {code:"00", token: token, message:"log in succesful" }, status: :ok
@@ -20,7 +20,7 @@ class AuthController < ApplicationController
         elsif @user.isAdmin ==false
             render :json=>{code:"01", message:"only admin authorised"}
         elsif @user.suspended ==true
-            render :json=>{code:"01", message:"your account has been suspended"}, status: :ok
+            render :json=>{code:"01", message:"your account has been suspended"}, status: :unauthorized
         elsif @user&.authenticate(params[:password])
           token = JsonWebToken.encode(user_id: @user.id)
           render :json=> {code:"00", token: token, message:"log in succesful" }, status: :ok
