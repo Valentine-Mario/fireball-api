@@ -1,5 +1,6 @@
 class UserController < ApplicationController
-    before_action :authorize_request, only: [:getProfile]
+    include Rails.application.routes.url_helpers
+    before_action :authorize_request, only: [:getProfile, :addPics]
     def createUser
         @new_user=User.new(user_params)
         if @new_user.save
@@ -13,9 +14,22 @@ class UserController < ApplicationController
 
     def getProfile
         if @current_user.suspended==true
-            render :json=>{code:"01", message:"your account has been suspended"}
+            render :json=>{code:"01", message:"your account has been suspended"}, status: :ok
         else
-            render :json=>{code:"00", message:@current_user}, status: :ok
+            pics= rails_blob_url(@current_user.avatar)
+            render :json=>{code:"00", message:@current_user, pics:pics}, status: :ok
+        end
+    end
+
+    def addPics
+        if @current_user.suspended==false
+            if  @current_user.avatar.attach(params[:avatar])
+                render :json=>{code:"00", message:"profile picture uploaded successfully"}, status: :ok
+            else
+                render :json=>{code:"01", message:"error uploading picture"}, status: :unprocessable_entity
+            end
+        else
+            render :json=>{code:"01", message:"account suspended"}, status: :ok
         end
     end
 

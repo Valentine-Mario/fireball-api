@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   scope 'user' do
     post '/create', :to=>'user#createUser'
     get '/get', :to=>'user#getProfile'
+    post '/addpics', :to=>'user#addPics'
   end
 
 
