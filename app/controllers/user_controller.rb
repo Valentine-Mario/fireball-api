@@ -1,6 +1,7 @@
 class UserController < ApplicationController
     include Rails.application.routes.url_helpers
-    before_action :authorize_request, only: [:getProfile, :addPics, :removePics, :editPassword]
+    before_action :authorize_request, only: [:getProfile, :addPics, :removePics, 
+        :editPassword, :deleteUser]
     def createUser
         @new_user=User.new(user_params)
         if @new_user.save
@@ -46,7 +47,7 @@ class UserController < ApplicationController
         if @current_user&.authenticate(params[:old_password])
            
                 if user_edit_password['password'].length < 6
-                    render :json=>{code:"01", message:"password must be at least 6 characters"}
+                    render :json=>{code:"01", message:"password must be at least 6 characters"}, status: :ok
                 else
                     @current_user.update(user_edit_password)
                     render :json=>{code:"00", message:"password updated successfully"}, status: :ok      
@@ -56,6 +57,13 @@ class UserController < ApplicationController
         end
     end
 
+    def deleteUser
+        if @current_user.destroy
+            render :json=>{message:"user deleted successfully"}, status: :ok
+        else
+            render :json=>{message:"error deleting user"}, status: :unprocessable_entity
+        end
+    end
 
 private
 def user_params

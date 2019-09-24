@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     post '/addpics', :to=>'user#addPics'
     get '/removepics', :to=>'user#removePics'
     post '/editpasssword', :to=>'user#editPassword'
+    get '/delete', :to=>'user#deleteUser'
   end
 
 
