@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     post '/create', :to=>'user#createUser'
     get '/get', :to=>'user#getProfile'
     post '/addpics', :to=>'user#addPics'
+    get '/removepics', :to=>'user#removePics'
   end
 
 
