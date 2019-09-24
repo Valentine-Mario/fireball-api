@@ -1,6 +1,6 @@
 class UserController < ApplicationController
     include Rails.application.routes.url_helpers
-    before_action :authorize_request, only: [:getProfile, :addPics, :removePics]
+    before_action :authorize_request, only: [:getProfile, :addPics, :removePics, :editPassword]
     def createUser
         @new_user=User.new(user_params)
         if @new_user.save
@@ -42,11 +42,30 @@ class UserController < ApplicationController
         end
     end
 
+    def editPassword 
+        if @current_user&.authenticate(params[:old_password])
+           
+                if user_edit_password['password'].length < 6
+                    render :json=>{code:"01", message:"password must be at least 6 characters"}
+                else
+                    @current_user.update(user_edit_password)
+                    render :json=>{code:"00", message:"password updated successfully"}, status: :ok      
+                end
+            else
+                render :json=>{code:"00", message:"authorization failed"}, status: :unauthorized
+        end
+    end
+
+
 private
 def user_params
         
     params.permit(
        :name, :email, :password, :password_confirmation, :isAdmin, :suspended
       )
+end
+
+def user_edit_password
+    params.permit(:password)
 end
 end
