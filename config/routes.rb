@@ -5,4 +5,9 @@ Rails.application.routes.draw do
     post '/create', :to=>'user#createUser'
   end
 
+
+  scope 'login' do
+    post '/user', :to=>'auth#login'
+    post '/admin', :to=>'auth#adminLogin'
+  end
 end
