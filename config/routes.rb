@@ -21,5 +21,6 @@ Rails.application.routes.draw do
   scope 'admin' do
     get '/makeadmin/:id', :to=>'admin#makeAdmin'
     get '/removeadmin/:id', :to=>'admin#removeAdmin'
+    get '/getusers', :to=>'admin#getAllUsers'
   end
 end
