@@ -17,4 +17,9 @@ Rails.application.routes.draw do
     post '/user', :to=>'auth#login'
     post '/admin', :to=>'auth#adminLogin'
   end
+
+  scope 'admin' do
+    get '/makeadmin/:id', :to=>'admin#makeAdmin'
+    get '/removeadmin/:id', :to=>'admin#removeAdmin'
+  end
 end
