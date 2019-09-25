@@ -1,7 +1,7 @@
 class AdminController < ApplicationController
     include Rails.application.routes.url_helpers
     before_action :authorize_request, except: []
-    before_action :findUser, only:[:makeAdmin, :removeAdmin]
+    before_action :findUser, except:[:getAllUsers]
 
     def makeAdmin
         if @current_user.isAdmin==false
@@ -31,7 +31,7 @@ class AdminController < ApplicationController
 
     def getAllUsers
         if @current_user.isAdmin==false
-            render :json=>{code:"00", message:"unauthorised to view list of all users"}, status: :unauthorised
+            render :json=>{code:"01", message:"unauthorised to view list of all users"}, status: :unauthorised
         else
             @users= User.paginate(page: params[:page], per_page: params[:per_page]).order("created_at DESC")
             @total=@users.total_entries
@@ -39,9 +39,45 @@ class AdminController < ApplicationController
         end
     end
 
+    def suspendUser
+        if @current_user.isAdmin==false
+            render :json=>{code:"01", message:"unauthorised to suspend user"}, status: :unauthorised
+        else
+            if @user.suspended==true
+                render :json=>{code:"01", message:@user.name+" is already suspended"}, status: :ok
+            else
+                @user.update(suspend)
+                render :json=>{code:"00", message:@user.name+" has been suspended successfully"}, status: :ok
+            end
+        end
+    end
+
+    def unsuspendUser
+        if @current_user.isAdmin==false
+            render :json=>{code:"01", message:"unauthorised to suspend user"}, status: :unauthorised
+        else
+            if @user.suspended==false
+                render :json=>{code:"01", message:@user.name+" is not suspended"}, status: :ok
+            else
+                @user.update(unsuspend)
+                render :json=>{code:"00", message:@user.name+" has been unsuspended successfully"}, status: :ok
+            end
+        end
+    end
+
     private
     def findUser
         @user= User.find(params[:id])
+    end
+
+    def suspend
+        defaults={suspended:true}
+        params.permit(:suspended).reverse_merge(defaults)
+    end
+
+    def unsuspend
+        defaults={suspended:false}
+        params.permit(:suspended).reverse_merge(defaults)
     end
 
     def setAdmin

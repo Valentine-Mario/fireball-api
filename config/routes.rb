@@ -23,5 +23,7 @@ Rails.application.routes.draw do
     get '/makeadmin/:id', :to=>'admin#makeAdmin'
     get '/removeadmin/:id', :to=>'admin#removeAdmin'
     get '/getusers', :to=>'admin#getAllUsers'
+    get '/suspend/:id', :to=>'admin#suspendUser'
+    get 'unsuspend/:id', :to=>'admin#unsuspendUser'
   end
 end

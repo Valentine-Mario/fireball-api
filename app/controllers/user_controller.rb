@@ -68,7 +68,7 @@ class UserController < ApplicationController
             #todo:remove the new password being sent to the client
             @pass=resetPassword
             @user.update(@pass)
-             render :json=>{code:"00", message:"password reset successfully check you email", pass:@pass}, status: :ok
+            render :json=>{code:"00", message:"password reset successfully check you email", pass:@pass}, status: :ok
         end
     end
 
