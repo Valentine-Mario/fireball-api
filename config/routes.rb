@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     get '/delete', :to=>'user#deleteUser'
     post '/edit', :to=>'user#editUser'
     get '/get/:token', :to=>'user#getUserByToken'
+    post '/forgotpassword', :to=>'user#forgotPassword'
   end
 
 

@@ -59,6 +59,19 @@ class UserController < ApplicationController
         end
     end
 
+    def forgotPassword
+        @user = User.find_by_email(params[:email])
+        #todo: send mail to user with new password
+        if @user == nil
+            render :json=>{code:"01", message:"this email does not seem to exist in our DB"}, status: :unauthorized
+        else
+            #todo:remove the new password being sent to the client
+            @pass=resetPassword
+            @user.update(@pass)
+             render :json=>{code:"00", message:"password reset successfully check you email", pass:@pass}, status: :ok
+        end
+    end
+
     def deleteUser
         @current_user.avatar.purge
         if @current_user.destroy
@@ -111,5 +124,11 @@ end
 
 def user_edit_password
     params.permit(:password)
+end
+
+def resetPassword
+    @a=(0...8).map { (65 + rand(26)).chr }.join
+    defaults={password:@a}
+    params.permit(:password).reverse_merge(defaults)
 end
 end
