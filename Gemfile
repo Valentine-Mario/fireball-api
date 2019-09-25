@@ -39,7 +39,7 @@ group :development do
   gem 'jwt'
   gem "aws-sdk-s3", require: false
   gem 'will_paginate', '~> 3.1.0'
-
+  gem 'has_secure_token'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

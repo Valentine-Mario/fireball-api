@@ -9,11 +9,21 @@ Rails.application.routes.draw do
     post '/editpasssword', :to=>'user#editPassword'
     get '/delete', :to=>'user#deleteUser'
     post '/edit', :to=>'user#editUser'
+    get '/get/:token', :to=>'user#getUserByToken'
+    post '/forgotpassword', :to=>'user#forgotPassword'
   end
 
 
   scope 'login' do
     post '/user', :to=>'auth#login'
     post '/admin', :to=>'auth#adminLogin'
+  end
+
+  scope 'admin' do
+    get '/makeadmin/:id', :to=>'admin#makeAdmin'
+    get '/removeadmin/:id', :to=>'admin#removeAdmin'
+    get '/getusers', :to=>'admin#getAllUsers'
+    get '/suspend/:id', :to=>'admin#suspendUser'
+    get 'unsuspend/:id', :to=>'admin#unsuspendUser'
   end
 end
