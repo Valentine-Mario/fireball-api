@@ -2,6 +2,8 @@ class UserController < ApplicationController
     include Rails.application.routes.url_helpers
     before_action :authorize_request, only: [:getProfile, :addPics, :removePics, 
         :editPassword, :deleteUser, :editUser]
+    before_action :findUser, only:[:getUserByToken]
+
     def createUser
         @new_user=User.new(user_params)
         if @new_user.save
@@ -78,7 +80,21 @@ class UserController < ApplicationController
         end
     end
 
+
+    def getUserByToken
+         pics= rails_blob_url(@user.avatar)
+         render :json=> {code:"00", message:@user, pics:pics}, status: :ok
+    end
+
+
+
+
 private
+
+def findUser
+    @user = User.find_by_token(params[:token])
+  end
+
 def user_params
         
     params.permit(
