@@ -40,6 +40,8 @@ group :development do
   gem "aws-sdk-s3", require: false
   gem 'will_paginate', '~> 3.1.0'
   gem 'has_secure_token'
+  gem 'active_storage_validations'
+  gem 'mini_magick', '>= 4.9.5'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

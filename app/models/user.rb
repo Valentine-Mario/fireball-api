@@ -15,6 +15,7 @@ class User < ApplicationRecord
                     length: { minimum: 6 },
                     if: -> { new_record? || !password.nil? }
             validates_presence_of :name, presence: true
+            validates :avatar, attached: true, content_type: ['image/png', 'image/jpg', 'image/jpeg']
         private
         def set_token
           self.token=generate_token
