@@ -1,5 +1,6 @@
 class ChannelsController < ApplicationController
-    before_action :authorize_request, except:[]
+    before_action :authorize_request, except:[:getChannelOfUser]
+    before_action :findUser, only:[:getChannelOfUser]
 
     def createChannel
         if @current_user.suspended==true
@@ -22,9 +23,16 @@ class ChannelsController < ApplicationController
            @channel= Channel.paginate(page: params[:page], per_page: params[:per_page]).where(user_id: @current_user.id)
            render :json=>{code:"00", message:@channel}, status: :ok
         end
+        #using include would not allow pagination
         #render :json=>{code:"00", message:@current_user, pics:pics}.to_json(:include=>{:channels=>{}}), status: :ok
     end
 
+    def getChannelOfUser
+        
+        @channel= Channel.paginate(page: params[:page], per_page: params[:per_page]).where(user_id: @user.id)
+        render :json=>{code:"00", message:@channel}, status: :ok
+
+    end
     private
 
     def create_params
@@ -32,4 +40,8 @@ class ChannelsController < ApplicationController
            :name, :description, :content
           )
     end
+
+    def findUser
+        @user = User.find_by_token(params[:token])
+      end
 end

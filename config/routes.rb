@@ -30,5 +30,6 @@ Rails.application.routes.draw do
   scope 'channel' do
     post '/add', :to=>'channels#createChannel'
     get '/get', :to=>'channels#getYourChannel'
+    get '/get/:token', :to=>'channels#getChannelOfUser'
   end
 end

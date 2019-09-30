@@ -5,11 +5,11 @@ one:
   description: MyString
   content: 1
   user: one
-  token: 
+  token_channel: 
 
 two:
   name: MyString
   description: MyString
   content: 1
   user: two
-  token: 
+  token_channel: 

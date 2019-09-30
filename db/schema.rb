@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_30_130236) do
+ActiveRecord::Schema.define(version: 2019_09_30_135541) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,10 +41,10 @@ ActiveRecord::Schema.define(version: 2019_09_30_130236) do
     t.string "description"
     t.integer "content"
     t.bigint "user_id", null: false
-    t.string "token"
+    t.string "token_channel"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["token"], name: "index_channels_on_token", unique: true
+    t.index ["token_channel"], name: "index_channels_on_token_channel", unique: true
     t.index ["user_id"], name: "index_channels_on_user_id"
   end
 
