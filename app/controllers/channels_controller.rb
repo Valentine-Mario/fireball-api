@@ -1,7 +1,11 @@
 class ChannelsController < ApplicationController
-    before_action :authorize_request, except:[:getChannelOfUser]
+    before_action :authorize_request, except:[:getChannelOfUser, :getChannelByToken]
     before_action :findUser, only:[:getChannelOfUser]
     before_action :set_post_user, only:[:editChannel]
+    before_action :findChannel, only:[:getChannelByToken]
+
+
+
 
     def createChannel
         if @current_user.suspended==true
@@ -36,14 +40,23 @@ class ChannelsController < ApplicationController
     end
 
     def editChannel
-        if @post.update(edit_params)
-            render :json=>{code:"00", message:"channel updated successfully"}, status: :ok
+        if @current_user.suspended==false
+            if @post.update(edit_params)
+                render :json=>{code:"00", message:"channel updated successfully"}, status: :ok
+            else
+                render :json=>{code:"01", message:"error updating channel"}, status: :unprocessable_entity
+            end
         else
-            render :json=>{code:"01", message:"error updating channel"}, status: :unprocessable_entity
+            render :json=>{code:"01", message:"your account has been suspended"}, status: :unauthorized
         end
+        
     end
 
-    
+    def getChannelByToken
+        render :json=>{code:"00", message:@channel}, status: :ok
+    end
+
+
     private
 
     def create_params
@@ -60,6 +73,10 @@ class ChannelsController < ApplicationController
 
     def findUser
         @user = User.find_by_token(params[:token])
+      end
+
+      def findChannel
+          @channel=Channel.find_by_token_channel(params[:token_channel])
       end
 
       def set_post_user

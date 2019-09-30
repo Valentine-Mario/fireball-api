@@ -32,5 +32,6 @@ Rails.application.routes.draw do
     get '/get', :to=>'channels#getYourChannel'
     get '/get/:token', :to=>'channels#getChannelOfUser'
     post '/edit/:id', :to=>'channels#editChannel'
+    get '/getone/:token_channel', :to=>'channels#getChannelByToken'
   end
 end
