@@ -72,6 +72,13 @@ class ChannelsController < ApplicationController
             render :json=>{code:"00", message:@channels, total:@total}, status: :ok
     end
 
+    def searchChannel
+        @channels = Channel.paginate(page: params[:page], per_page: params[:per_page]).where("name LIKE ? OR description LIKE ?", "%#{params[:name]}%", "%#{params[:description]}%").order("created_at DESC")
+        @total=@channels.total_entries
+        render :json=>{code:"00", message:@channels, total:@total}
+    end
+
+    
 
     private
 
