@@ -26,4 +26,9 @@ Rails.application.routes.draw do
     get '/suspend/:id', :to=>'admin#suspendUser'
     get 'unsuspend/:id', :to=>'admin#unsuspendUser'
   end
+
+  scope 'channel' do
+    post '/add', :to=>'channels#createChannel'
+    get '/get', :to=>'channels#getYourChannel'
+  end
 end

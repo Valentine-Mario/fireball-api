@@ -9,6 +9,7 @@ class User < ApplicationRecord
             self.suspended = false
             self.avatar.attach(io: File.open(Rails.root.join("app", "assets", "images", "default.png")), filename: 'default.png' , content_type: "image/png")
           end
+            has_many :channels, dependent: :destroy
             validates :email, presence: true, uniqueness: true
             validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
             validates :password,
