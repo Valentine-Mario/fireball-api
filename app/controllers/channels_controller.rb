@@ -1,6 +1,7 @@
 class ChannelsController < ApplicationController
     before_action :authorize_request, except:[:getChannelOfUser]
     before_action :findUser, only:[:getChannelOfUser]
+    before_action :set_post_user, only:[:editChannel]
 
     def createChannel
         if @current_user.suspended==true
@@ -33,6 +34,16 @@ class ChannelsController < ApplicationController
         render :json=>{code:"00", message:@channel}, status: :ok
 
     end
+
+    def editChannel
+        if @post.update(edit_params)
+            render :json=>{code:"00", message:"channel updated successfully"}, status: :ok
+        else
+            render :json=>{code:"01", message:"error updating channel"}, status: :unprocessable_entity
+        end
+    end
+
+    
     private
 
     def create_params
@@ -41,7 +52,17 @@ class ChannelsController < ApplicationController
           )
     end
 
+    def edit_params
+        params.permit(
+           :name, :description
+          )
+    end
+
     def findUser
         @user = User.find_by_token(params[:token])
+      end
+
+      def set_post_user
+        @post = @current_user.channels.find_by!(id: params[:id]) if @current_user
       end
 end
