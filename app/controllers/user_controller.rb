@@ -24,6 +24,7 @@ class UserController < ApplicationController
         end
     end
 
+
     def addPics
         if @current_user.suspended==false
             if  @current_user.avatar.attach(params[:avatar])
