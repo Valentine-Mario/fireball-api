@@ -36,5 +36,17 @@ Rails.application.routes.draw do
     get '/delete/:id', :to=>'channels#deleteChannel'
     get '/getall', :to=>'channels#getAllChannels'
     get '/search/:any', :to=>'channels#searchChannel'
+    get '/getyoursub/:id', :to=>'channels#getSubscribersToYourChannel'
+  end
+
+  scope 'sub' do
+    get '/add/:id', :to=>'subscription#addSub'
+    get '/remove/:id', :to=>'subscription#deleteSub'
+    get '/get', :to=>'subscription#viewSub'
+  end
+
+  scope 'podcast' do
+    post '/add/:id', :to=>'podcast#addPodcast'
+    get '/get/:id', :to=>'podcast#getPod'
   end
 end

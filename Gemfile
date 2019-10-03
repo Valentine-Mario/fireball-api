@@ -42,6 +42,9 @@ group :development do
   gem 'has_secure_token'
   gem 'active_storage_validations'
   gem 'mini_magick', '>= 4.9.5'
+  gem 'elasticsearch-model', git: 'git://github.com/elastic/elasticsearch-rails.git', branch: 'master'
+  gem 'elasticsearch-rails', git: 'git://github.com/elastic/elasticsearch-rails.git', branch: 'master'
+
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
