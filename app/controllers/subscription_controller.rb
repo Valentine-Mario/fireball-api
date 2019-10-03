@@ -31,8 +31,9 @@ class SubscriptionController < ApplicationController
     end
 
     def viewSub
-        @sub=@current_user.subscriptions
-        render :json=>{code:"00", message:@sub}.to_json(:include=>{:channel=>{}}), status: :ok
+        @sub=@current_user.subscriptions.paginate(page: params[:page], per_page: params[:per_page])
+        @total=@sub.total_entries
+        render :json=>{code:"00", message:@sub, total:@total}.to_json(:include=>{:channel=>{}}), status: :ok
     end
 
     private

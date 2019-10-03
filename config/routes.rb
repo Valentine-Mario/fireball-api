@@ -36,6 +36,7 @@ Rails.application.routes.draw do
     get '/delete/:id', :to=>'channels#deleteChannel'
     get '/getall', :to=>'channels#getAllChannels'
     get '/search/:any', :to=>'channels#searchChannel'
+    get '/getyoursub/:id', :to=>'channels#getSubscribersToYourChannel'
   end
 
   scope 'sub' do

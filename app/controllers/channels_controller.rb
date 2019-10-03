@@ -1,7 +1,7 @@
 class ChannelsController < ApplicationController
     before_action :authorize_request, except:[:getChannelOfUser, :getChannelByToken]
     before_action :findUser, only:[:getChannelOfUser]
-    before_action :set_post_user, only:[:editChannel, :deleteChannel]
+    before_action :set_post_user, only:[:editChannel, :deleteChannel, :getSubscribersToYourChannel]
     before_action :findChannel, only:[:getChannelByToken]
 
 
@@ -79,6 +79,12 @@ class ChannelsController < ApplicationController
 
     end
 
+
+    def getSubscribersToYourChannel
+        @sub=@post.subscriptions.paginate(page: params[:page], per_page: params[:per_page])
+        @total=@sub.total_entries
+        render :json=>{code:"00", message:@sub, total:@total}.to_json(:include=>{:user=>{}}), status: :ok
+    end
     
 
     private
