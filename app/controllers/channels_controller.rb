@@ -53,12 +53,20 @@ class ChannelsController < ApplicationController
     end
 
     def getChannelByToken
-        render :json=>{code:"00", message:@channel}, status: :ok
+        render :json=>{code:"00", message:@channel, subscribers:@channel.subscriptions.length}, status: :ok
     end
 
     def deleteChannel
         #todo: delete all the content in the channel when you create content model
         if @current_user.suspended==false
+            if @post.content==1
+                for i in @post.podcasts do
+                    i.pod.purge
+                    i.destroy
+                end
+            elsif @post.content==2
+                #code here
+            end
             @post.destroy
             render :json=>{code:"00", message:"channel deleted successfully"}, status: :ok
         else
