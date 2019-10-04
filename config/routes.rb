@@ -50,5 +50,6 @@ Rails.application.routes.draw do
     get '/getall', :to=>'podcast#getAllPodcast'
     get '/get/:token_channel', :to=>'podcast#getPodCastInChannel'
     post '/edit/:id', :to=>'podcast#editPodcast'
+    get '/delete/:id', :to=>'podcast#deletePodcast'
   end
 end

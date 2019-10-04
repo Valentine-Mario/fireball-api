@@ -3,7 +3,7 @@ class PodcastController < ApplicationController
     before_action :authorize_request, only:[:addPodcast, :editPodcast]
     before_action :getChannel, only:[:addPodcast]
     before_action :findChannelByToken, only:[:getPodCastInChannel]
-    before_action :getPodcast, only:[:editPodcast]
+    before_action :getPodcast, only:[:editPodcast, :deletePodcast]
 
     def addPodcast
        if @current_user.suspended==false
@@ -45,6 +45,15 @@ class PodcastController < ApplicationController
            else
                 render :json=>{code:"01", message:"error editing modal"}, status: :unprocessable_entity
            end
+        else
+            render :json=>{code:"01", message:"account suspended"}, status: :unauthorized
+        end
+    end
+
+    def deletePodcast
+        if @current_user.suspended==false
+            @podcast.pod.purge
+            render :json=>{code:"00", message:"podcast deleted successfully"}, status: :ok
         else
             render :json=>{code:"01", message:"account suspended"}, status: :unauthorized
         end
