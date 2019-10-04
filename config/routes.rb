@@ -51,5 +51,6 @@ Rails.application.routes.draw do
     get '/get/:token_channel', :to=>'podcast#getPodCastInChannel'
     post '/edit/:id', :to=>'podcast#editPodcast'
     get '/delete/:id', :to=>'podcast#deletePodcast'
+    get '/listen/:token', :to=>'podcast#ListenToPodcast'
   end
 end
