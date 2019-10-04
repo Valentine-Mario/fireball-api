@@ -1,4 +1,6 @@
 class ChannelsController < ApplicationController
+    include Rails.application.routes.url_helpers
+
     before_action :authorize_request, except:[:getChannelOfUser, :getChannelByToken]
     before_action :findUser, only:[:getChannelOfUser]
     before_action :set_post_user, only:[:editChannel, :deleteChannel, :getSubscribersToYourChannel]
@@ -26,7 +28,8 @@ class ChannelsController < ApplicationController
             render :json=>{code:"01", message:"your account has been suspended"}, status: :unauthorized
         else
            @channel= Channel.paginate(page: params[:page], per_page: params[:per_page]).where(user_id: @current_user.id)
-           render :json=>{code:"00", message:@channel}, status: :ok
+           total=@channel.total_entries
+           render :json=>{code:"00", message:@channel, total:total}, status: :ok
         end
         #using include would not allow pagination
         #render :json=>{code:"00", message:@current_user, pics:pics}.to_json(:include=>{:channels=>{}}), status: :ok
@@ -35,7 +38,9 @@ class ChannelsController < ApplicationController
     def getChannelOfUser
         
         @channel= Channel.paginate(page: params[:page], per_page: params[:per_page]).where(user_id: @user.id)
-        render :json=>{code:"00", message:@channel}, status: :ok
+        total=@channel.total_entries
+        
+        render :json=>{code:"00", message:@channel, total:total}, status: :ok
 
     end
 
@@ -53,12 +58,21 @@ class ChannelsController < ApplicationController
     end
 
     def getChannelByToken
-        render :json=>{code:"00", message:@channel}, status: :ok
+        user=User.where(id:@channel.user_id)
+        render :json=>{code:"00", message:@channel, user_pics:rails_blob_url(user[0].avatar), user:user[0], subscribers:@channel.subscriptions.length}.to_json(:include=>{:user=>{}}), status: :ok
     end
 
     def deleteChannel
         #todo: delete all the content in the channel when you create content model
         if @current_user.suspended==false
+            if @post.content==1
+                for i in @post.podcasts do
+                    i.pod.purge
+                    i.destroy
+                end
+            elsif @post.content==2
+                #code here
+            end
             @post.destroy
             render :json=>{code:"00", message:"channel deleted successfully"}, status: :ok
         else
@@ -67,15 +81,15 @@ class ChannelsController < ApplicationController
     end
 
     def getAllChannels
-            @channels= Channel.paginate(page: params[:page], per_page: params[:per_page]).order("created_at DESC")
-            @total=@channels.total_entries
-            render :json=>{code:"00", message:@channels, total:@total}, status: :ok
+            @channel= Channel.paginate(page: params[:page], per_page: params[:per_page]).order("created_at DESC")
+            @total=@channel.total_entries
+            render :json=>{code:"00", message:@channel, total:@total}.to_json(:include=>{:user=>{}}), status: :ok
     end
 
     def searchChannel
         @channels = Channel.paginate(page: params[:page], per_page: params[:per_page]).where("name LIKE ? OR description LIKE ?", "%#{params[:any]}%", "%#{params[:any]}%").order("created_at DESC")
         @total=@channels.total_entries
-        render :json=>{code:"00", message:@channels, total:@total}
+        render :json=>{code:"00", message:@channels, total:@total}.to_json(:include=>{:user=>{}}), status: :ok
 
     end
 

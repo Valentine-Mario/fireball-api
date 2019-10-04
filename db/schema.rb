@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_03_143349) do
+ActiveRecord::Schema.define(version: 2019_10_04_132028) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,6 +46,15 @@ ActiveRecord::Schema.define(version: 2019_10_03_143349) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["token_channel"], name: "index_channels_on_token_channel", unique: true
     t.index ["user_id"], name: "index_channels_on_user_id"
+  end
+
+  create_table "podcasthistories", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "podcast_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["podcast_id"], name: "index_podcasthistories_on_podcast_id"
+    t.index ["user_id"], name: "index_podcasthistories_on_user_id"
   end
 
   create_table "podcasts", force: :cascade do |t|
@@ -85,6 +94,8 @@ ActiveRecord::Schema.define(version: 2019_10_03_143349) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "channels", "users"
+  add_foreign_key "podcasthistories", "podcasts"
+  add_foreign_key "podcasthistories", "users"
   add_foreign_key "podcasts", "channels"
   add_foreign_key "podcasts", "users"
   add_foreign_key "subscriptions", "channels"

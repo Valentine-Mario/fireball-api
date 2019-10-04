@@ -1,7 +1,7 @@
 class UserController < ApplicationController
     include Rails.application.routes.url_helpers
     before_action :authorize_request, only: [:getProfile, :addPics, :removePics, 
-        :editPassword, :deleteUser, :editUser]
+        :editPassword, :deleteUser, :editUser, :getPodcastHistory]
     before_action :findUser, only:[:getUserByToken]
 
     def createUser
@@ -100,6 +100,12 @@ class UserController < ApplicationController
          render :json=> {code:"00", message:@user, pics:pics}, status: :ok
     end
 
+
+    def getPodcastHistory
+        history= @current_user.podcasthistories.paginate(page: params[:page], per_page: params[:per_page])
+        total=history.total_entries
+        render :json=>{code:"00", message:history, total:total}.to_json(:include=>{:podcast=>{}}), status: :ok
+    end
 
 
 

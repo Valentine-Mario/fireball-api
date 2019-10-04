@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     post '/edit', :to=>'user#editUser'
     get '/get/:token', :to=>'user#getUserByToken'
     post '/forgotpassword', :to=>'user#forgotPassword'
+    get '/podcast/history', :to=>'user#getPodcastHistory'
   end
 
 
@@ -47,6 +48,11 @@ Rails.application.routes.draw do
 
   scope 'podcast' do
     post '/add/:id', :to=>'podcast#addPodcast'
-    get '/get/:id', :to=>'podcast#getPod'
+    get '/getall', :to=>'podcast#getAllPodcast'
+    get '/get/:token_channel', :to=>'podcast#getPodCastInChannel'
+    post '/edit/:id', :to=>'podcast#editPodcast'
+    get '/delete/:id', :to=>'podcast#deletePodcast'
+    get '/listen/:token', :to=>'podcast#ListenToPodcast'
+    get '/history/:id', :to=>'podcast#viewListenHistory'
   end
 end
