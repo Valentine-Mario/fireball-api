@@ -47,6 +47,8 @@ Rails.application.routes.draw do
 
   scope 'podcast' do
     post '/add/:id', :to=>'podcast#addPodcast'
-    get '/get/:id', :to=>'podcast#getPod'
+    get '/getall', :to=>'podcast#getAllPodcast'
+    get '/get/:token_channel', :to=>'podcast#getPodCastInChannel'
+    post '/edit/:id', :to=>'podcast#editPodcast'
   end
 end

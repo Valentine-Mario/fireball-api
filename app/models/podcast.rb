@@ -7,7 +7,7 @@ class Podcast < ApplicationRecord
   validates :title, presence:true
   after_initialize :set_defaults, unless: :persisted?
   has_one_attached :pod
-  validates :pod, attached: true, content_type: ['audio/mp3', 'audio/wav', 'audio/mpeg', 'audio/ogg']
+  validates :pod, attached: true, content_type: ['audio/mp3', 'audio/wave', 'audio/mpeg', 'audio/ogg']
 
   def set_defaults 
       self.suspended = false
