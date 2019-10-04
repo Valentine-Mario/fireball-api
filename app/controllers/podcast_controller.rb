@@ -1,9 +1,9 @@
 class PodcastController < ApplicationController
     include Rails.application.routes.url_helpers
-    before_action :authorize_request, only:[:addPodcast, :editPodcast, :ListenToPodcast]
+    before_action :authorize_request, only:[:addPodcast, :editPodcast, :deletePodcast, :ListenToPodcast, :viewListenHistory]
     before_action :getChannel, only:[:addPodcast]
     before_action :findChannelByToken, only:[:getPodCastInChannel]
-    before_action :getPodcast, only:[:editPodcast, :deletePodcast]
+    before_action :getPodcast, only:[:editPodcast, :deletePodcast, :viewListenHistory]
 
     def addPodcast
        if @current_user.suspended==false
@@ -66,6 +66,16 @@ class PodcastController < ApplicationController
        @pod_history.save
        pod=rails_blob_url(@podcasts.pod)
        render :json=>{code:"00", message:@podcasts, podcast:pod, listens:@podcasts.podcasthistories.length}.to_json(:include=>[:channel, :user]), status: :ok
+    end
+
+    def viewListenHistory
+        if @current_user.suspended==false
+            history= @podcast.podcasthistories.paginate(page: params[:page], per_page: params[:per_page])
+            total=history.total_entries
+            render :json=>{code:"00", message:history, total:total}.to_json(:include=>[:user]), status: :ok
+        else
+            render :json=>{code:"01", message:"account suspended"}, status: :ok
+        end
     end
     
 
