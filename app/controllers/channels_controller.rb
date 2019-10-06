@@ -4,7 +4,7 @@ class ChannelsController < ApplicationController
     before_action :authorize_request, except:[:getChannelOfUser, :getChannelByToken]
     before_action :findUser, only:[:getChannelOfUser]
     before_action :set_post_user, only:[:editChannel, :deleteChannel, :getSubscribersToYourChannel]
-    before_action :findChannel, only:[:getChannelByToken]
+    before_action :findChannel, only:[:getChannelByToken, :checkSubscription]
 
 
 
@@ -23,6 +23,8 @@ class ChannelsController < ApplicationController
         end
     end
 
+
+
     def getYourChannel
         if @current_user.suspended==true
             render :json=>{code:"01", message:"your account has been suspended"}, status: :unauthorized
@@ -35,6 +37,8 @@ class ChannelsController < ApplicationController
         #render :json=>{code:"00", message:@current_user, pics:pics}.to_json(:include=>{:channels=>{}}), status: :ok
     end
 
+
+
     def getChannelOfUser
         
         @channel= Channel.paginate(page: params[:page], per_page: params[:per_page]).where(user_id: @user.id)
@@ -43,6 +47,8 @@ class ChannelsController < ApplicationController
         render :json=>{code:"00", message:@channel, total:total}, status: :ok
 
     end
+
+
 
     def editChannel
         if @current_user.suspended==false
@@ -57,10 +63,14 @@ class ChannelsController < ApplicationController
         
     end
 
+
+
     def getChannelByToken
         user=User.where(id:@channel.user_id)
         render :json=>{code:"00", message:@channel, user_pics:rails_blob_url(user[0].avatar), user:user[0], subscribers:@channel.subscriptions.length}.to_json(:include=>{:user=>{}}), status: :ok
     end
+
+
 
     def deleteChannel
         #todo: delete all the content in the channel when you create content model
@@ -80,11 +90,15 @@ class ChannelsController < ApplicationController
         end
     end
 
+
+
     def getAllChannels
             @channel= Channel.paginate(page: params[:page], per_page: params[:per_page]).order("created_at DESC")
             @total=@channel.total_entries
             render :json=>{code:"00", message:@channel, total:@total}.to_json(:include=>{:user=>{}}), status: :ok
     end
+
+
 
     def searchChannel
         @channels = Channel.paginate(page: params[:page], per_page: params[:per_page]).where("name LIKE ? OR description LIKE ?", "%#{params[:any]}%", "%#{params[:any]}%").order("created_at DESC")
@@ -94,12 +108,24 @@ class ChannelsController < ApplicationController
     end
 
 
+
+
     def getSubscribersToYourChannel
         @sub=@post.subscriptions.paginate(page: params[:page], per_page: params[:per_page])
         @total=@sub.total_entries
         render :json=>{code:"00", message:@sub, total:@total}.to_json(:include=>{:user=>{}}), status: :ok
     end
     
+
+    #check if logged in user is subscribed to a channel
+    def checkSubscription
+        @check_sub= Subscription.where(user_id:@current_user.id , channel_id:@channel.id )
+        if @check_sub.length>0
+            render :json=>{subscribed:true}, status: :ok
+        else
+            render :json=>{subscribed:false}, status: :ok
+        end
+    end
 
     private
 
