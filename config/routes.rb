@@ -57,4 +57,8 @@ Rails.application.routes.draw do
     get '/history/:id', :to=>'podcast#viewListenHistory'
     get '/search/:any', :to=>'podcast#searchPodcast'
   end
+
+  scope 'video' do
+    post '/add/:id', :to=>'videos#createVideo'
+  end
 end

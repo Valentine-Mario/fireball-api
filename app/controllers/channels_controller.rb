@@ -81,7 +81,10 @@ class ChannelsController < ApplicationController
                     i.destroy
                 end
             elsif @post.content==2
-                #code here
+                for i in @post.videos do
+                    i.vid.purge
+                    i.destroy
+                end
             end
             @post.destroy
             render :json=>{code:"00", message:"channel deleted successfully"}, status: :ok

@@ -17,7 +17,7 @@ class PodcastController < ApplicationController
                     render :json=>{code:"01", message:"error creating post"}, status: :unprocessable_entity
                 end
             else
-                render :json=>{code:"01", message:"only podcast allowed here"}, status: :ok
+                render :json=>{code:"01", message:"only podcast allowed in this channel"}, status: :ok
             end
         
        else

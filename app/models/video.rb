@@ -7,7 +7,7 @@ class Video < ApplicationRecord
   validates :title, presence:true
   after_initialize :set_defaults, unless: :persisted?
   has_one_attached :vid
-  validates :vid, attached: true , content_type: ['video/mp4', 'video/3gp', 'video/avi', 'video/flv', 'video/mkv', 'video/mov']
+  validates :vid, attached: true , content_type: ['video/mp4', 'video/3gpp', 'video/x-msvideo', 'video/x-flv', 'video/x-matroska', 'video/quicktime']
 
   def set_defaults 
     self.suspended = false
