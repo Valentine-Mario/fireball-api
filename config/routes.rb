@@ -38,6 +38,7 @@ Rails.application.routes.draw do
     get '/getall', :to=>'channels#getAllChannels'
     get '/search/:any', :to=>'channels#searchChannel'
     get '/getyoursub/:id', :to=>'channels#getSubscribersToYourChannel'
+    get '/checkusersub/:token_channel', :to=>'channel#checkSubscription'
   end
 
   scope 'sub' do
@@ -54,5 +55,15 @@ Rails.application.routes.draw do
     get '/delete/:id', :to=>'podcast#deletePodcast'
     get '/listen/:token', :to=>'podcast#ListenToPodcast'
     get '/history/:id', :to=>'podcast#viewListenHistory'
+    get '/search/:any', :to=>'podcast#searchPodcast'
+  end
+
+  scope 'video' do
+    post '/add/:id', :to=>'videos#createVideo'
+    get '/getall', :to=>'videos#getAllVideos'
+    get '/get/:token_channel', :to=>'videos#getVideoInChannel'
+    post '/edit/:id', :to=>'videos#editVideo'
+    get '/delete/:id', :to=>'videos#deleteVideo'
+    get '/search/:any', :to=>'videos#searchVideo'
   end
 end

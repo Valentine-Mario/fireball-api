@@ -13,6 +13,7 @@ class User < ApplicationRecord
             has_many :subscriptions, dependent: :destroy
             has_many :podcasts, dependent: :destroy
             has_many :podcasthistories, dependent: :destroy
+            has_many :videos, dependent: :destroy
 
             validates :email, presence: true, uniqueness: true
             validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }

@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  description: MyString
+  channel: one
+  user: one
+  suspended: false
+  token: 
+
+two:
+  title: MyString
+  description: MyString
+  channel: two
+  user: two
+  suspended: false
+  token: 

@@ -17,7 +17,7 @@ class PodcastController < ApplicationController
                     render :json=>{code:"01", message:"error creating post"}, status: :unprocessable_entity
                 end
             else
-                render :json=>{code:"01", message:"only podcast allowed here"}, status: :ok
+                render :json=>{code:"01", message:"only podcast allowed in this channel"}, status: :ok
             end
         
        else
@@ -25,14 +25,16 @@ class PodcastController < ApplicationController
        end
     end
 
+
     def getAllPodcast
         @podcasts=Podcast.paginate(page: params[:page], per_page: params[:per_page]).where(suspended: false)
         total=@podcasts.total_entries
         render :json=>{code:"00", message:@podcasts, total:total}.to_json(:include=>[:channel]), status: :ok
     end
 
+
     def getPodCastInChannel
-        @podcast=@channel.podcasts.paginate(page: params[:page], per_page: params[:per_page])
+        @podcast=@channel.podcasts.paginate(page: params[:page], per_page: params[:per_page]).where(suspended: false)
         total=@podcast.total_entries
         
         render :json=>{code:"00", message:@podcast, channel:@channel, total:total}, status: :ok
@@ -53,6 +55,7 @@ class PodcastController < ApplicationController
     def deletePodcast
         if @current_user.suspended==false
             @podcast.pod.purge
+            @podcast.destroy
             render :json=>{code:"00", message:"podcast deleted successfully"}, status: :ok
         else
             render :json=>{code:"01", message:"account suspended"}, status: :unauthorized
@@ -61,11 +64,15 @@ class PodcastController < ApplicationController
 
     def ListenToPodcast
        @podcasts= Podcast.find_by_token!(params[:token])
-       @pod_history=@podcasts.podcasthistories.create 
-       @pod_history.user_id=@current_user.id
-       @pod_history.save
-       pod=rails_blob_url(@podcasts.pod)
-       render :json=>{code:"00", message:@podcasts, podcast:pod, listens:@podcasts.podcasthistories.length}.to_json(:include=>[:channel, :user]), status: :ok
+        if @podcasts.suspended==false
+            @pod_history=@podcasts.podcasthistories.create 
+            @pod_history.user_id=@current_user.id
+            @pod_history.save
+            pod=rails_blob_url(@podcasts.pod)
+            render :json=>{code:"00", message:@podcasts, podcast:pod, listens:@podcasts.podcasthistories.length}.to_json(:include=>[:channel, :user]), status: :ok 
+        else
+            render :json=>{code:"01", message:"podcast has been suspeded"}, status: :unauthorized
+        end
     end
 
     def viewListenHistory
@@ -76,6 +83,13 @@ class PodcastController < ApplicationController
         else
             render :json=>{code:"01", message:"account suspended"}, status: :ok
         end
+    end
+
+
+    def searchPodcast
+        @podcasts = Podcast.paginate(page: params[:page], per_page: params[:per_page]).where("title LIKE ? OR desciption LIKE ?", "%#{params[:any]}%", "%#{params[:any]}%").where(suspended: false).order("created_at DESC")
+        @total=@podcasts.total_entries
+        render :json=>{code:"00", message:@podcasts, total:@total}.to_json(:include=>[:channel]), status: :ok
     end
     
 
