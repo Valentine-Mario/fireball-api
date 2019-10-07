@@ -8,7 +8,7 @@ class Channel < ApplicationRecord
   validates :content, presence:true
   has_many :subscriptions, dependent: :destroy
   has_many :podcasts, dependent: :destroy
-
+  has_many :videos, dependent: :destroy
   # def self.search(query)
   #   __elasticsearch__.search(
   #    {

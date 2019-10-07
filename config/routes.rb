@@ -60,5 +60,10 @@ Rails.application.routes.draw do
 
   scope 'video' do
     post '/add/:id', :to=>'videos#createVideo'
+    get '/getall', :to=>'videos#getAllVideos'
+    get '/get/:token_channel', :to=>'videos#getVideoInChannel'
+    post '/edit/:id', :to=>'videos#editVideo'
+    get '/delete/:id', :to=>'videos#deleteVideo'
+    get '/search/:any', :to=>'videos#searchVideo'
   end
 end

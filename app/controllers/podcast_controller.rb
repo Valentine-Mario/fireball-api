@@ -34,7 +34,7 @@ class PodcastController < ApplicationController
 
 
     def getPodCastInChannel
-        @podcast=@channel.podcasts.paginate(page: params[:page], per_page: params[:per_page])
+        @podcast=@channel.podcasts.paginate(page: params[:page], per_page: params[:per_page]).where(suspended: false)
         total=@podcast.total_entries
         
         render :json=>{code:"00", message:@podcast, channel:@channel, total:total}, status: :ok
@@ -55,6 +55,7 @@ class PodcastController < ApplicationController
     def deletePodcast
         if @current_user.suspended==false
             @podcast.pod.purge
+            @podcast.destroy
             render :json=>{code:"00", message:"podcast deleted successfully"}, status: :ok
         else
             render :json=>{code:"01", message:"account suspended"}, status: :unauthorized
@@ -88,7 +89,7 @@ class PodcastController < ApplicationController
     def searchPodcast
         @podcasts = Podcast.paginate(page: params[:page], per_page: params[:per_page]).where("title LIKE ? OR desciption LIKE ?", "%#{params[:any]}%", "%#{params[:any]}%").where(suspended: false).order("created_at DESC")
         @total=@podcasts.total_entries
-        render :json=>{code:"00", message:@podcasts}.to_json(:include=>[:channel]), status: :ok
+        render :json=>{code:"00", message:@podcasts, total:@total}.to_json(:include=>[:channel]), status: :ok
     end
     
 
