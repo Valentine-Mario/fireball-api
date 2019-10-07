@@ -1,0 +1,26 @@
+class Video < ApplicationRecord
+  belongs_to :channel
+  belongs_to :user
+  has_secure_token
+  before_create :set_token
+  validates :description, presence:true
+  validates :title, presence:true
+  after_initialize :set_defaults, unless: :persisted?
+  has_one_attached :vid
+  validates :vid, attached: true , content_type: ['video/mp4', 'video/3gp', 'video/avi', 'video/flv', 'video/mkv', 'video/mov']
+
+  def set_defaults 
+    self.suspended = false
+  end
+private
+      def set_token
+        self.token=generate_token
+      end
+
+      def generate_token
+        loop do
+          token = SecureRandom.hex(10)
+          break token unless Podcast.where(token:token).exists?
+        end
+      end
+end

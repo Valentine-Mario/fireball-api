@@ -55,5 +55,6 @@ Rails.application.routes.draw do
     get '/delete/:id', :to=>'podcast#deletePodcast'
     get '/listen/:token', :to=>'podcast#ListenToPodcast'
     get '/history/:id', :to=>'podcast#viewListenHistory'
+    get '/search/:any', :to=>'podcast#searchPodcast'
   end
 end
