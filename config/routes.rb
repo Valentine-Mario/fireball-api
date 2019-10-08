@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     get '/get/:token', :to=>'user#getUserByToken'
     post '/forgotpassword', :to=>'user#forgotPassword'
     get '/podcast/history', :to=>'user#getPodcastHistory'
+    get '/video/history', :to=>'user#getVideoHostory'
   end
 
 
@@ -65,5 +66,13 @@ Rails.application.routes.draw do
     post '/edit/:id', :to=>'videos#editVideo'
     get '/delete/:id', :to=>'videos#deleteVideo'
     get '/search/:any', :to=>'videos#searchVideo'
+    get '/getvid/:token', :to=>'videos#getVideoByToken'
+    get '/history/:id', :to=>'videos#getViewHistory'
+  end
+
+  scope 'podcomment' do
+    post '/add/:id', :to=>'podcastcomment#addComment'
+    get '/delete/:id', :to=>'podcastcomment#deleteComment'
+    get '/get/:token', :to=>'podcastcomment#getCommentinPodcast'
   end
 end

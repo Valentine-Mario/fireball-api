@@ -1,9 +1,9 @@
 class VideosController < ApplicationController
     include Rails.application.routes.url_helpers
-    before_action :authorize_request, only:[:createVideo, :editVideo, :deleteVideo]
+    before_action :authorize_request, only:[:createVideo, :editVideo, :deleteVideo, :getVideoByToken, :getViewHistory]
     before_action :getChannel, only:[:createVideo]
     before_action :findChannelByToken, only:[:getVideoInChannel]
-    before_action :getVideo, only:[:editVideo, :deleteVideo]
+    before_action :getVideo, only:[:editVideo, :deleteVideo, :getViewHistory]
 
     def createVideo
         if @current_user.suspended==false
@@ -51,6 +51,9 @@ class VideosController < ApplicationController
 
     def deleteVideo
         if @current_user.suspended==false
+            for i in @video.vidcomments do
+                i.destroy
+            end
             @video.vid.purge
             @video.destroy
             render :json=>{code:"00", message:"video deleted successfully"}, status: :ok
@@ -64,11 +67,31 @@ class VideosController < ApplicationController
         @total=@videos.total_entries
         render :json=>{code:"00", message:@videos, total:@total}.to_json(:include=>[:channel]), status: :ok
     end
-    # def getVid
-    #     @vid=Video.find_by(id:params[:id])
-    #     vid_img=rails_blob_url(@vid.vid)
-    #     render :json=>{message:@vid, pics:vid_img}
-    # end
+
+
+    def getVideoByToken
+        @video= Video.find_by_token!(params[:token])
+        if @video.suspended==false
+            @vid_history=@video.videohistories.create 
+            @vid_history.user_id=@current_user.id
+            @vid_history.save
+            vid_link=rails_blob_url(@video.vid)
+            render :json=>{code:"00", message:@video, video:vid_link, views:@video.videohistories.length}.to_json(:include=>[:channel, :user]), status: :ok
+        else
+            render :json=>{code:"01", message:"this video has been suspended"}, status: :unauthorized
+        end
+    end
+    
+
+    def getViewHistory
+        if @current_user.suspended==false
+            history= @video.videohistories.paginate(page: params[:page], per_page: params[:per_page])
+            total=history.total_entries
+            render :json=>{code:"00", message:history, total:total}.to_json(:include=>[:user]), status: :ok
+        else
+            render :json=>{code:"01", message:"account suspended"}, status: :ok
+        end
+    end
 
 
     private

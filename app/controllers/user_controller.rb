@@ -1,7 +1,7 @@
 class UserController < ApplicationController
     include Rails.application.routes.url_helpers
     before_action :authorize_request, only: [:getProfile, :addPics, :removePics, 
-        :editPassword, :deleteUser, :editUser, :getPodcastHistory]
+        :editPassword, :deleteUser, :editUser, :getPodcastHistory, :getVideoHostory]
     before_action :findUser, only:[:getUserByToken]
 
     def createUser
@@ -73,6 +73,7 @@ class UserController < ApplicationController
         end
     end
 
+    #todo: remeber to delete all user channel, podcast, videos, comments and replies on delteion
     def deleteUser
         @current_user.avatar.purge
         if @current_user.destroy
@@ -105,6 +106,13 @@ class UserController < ApplicationController
         history= @current_user.podcasthistories.paginate(page: params[:page], per_page: params[:per_page])
         total=history.total_entries
         render :json=>{code:"00", message:history, total:total}.to_json(:include=>{:podcast=>{}}), status: :ok
+    end
+
+
+    def getVideoHostory
+        history= @current_user.videohistories.paginate(page: params[:page], per_page: params[:per_page])
+        total=history.total_entries
+        render :json=>{code:"00", message:history, total:total}.to_json(:include=>{:video=>{}}), status: :ok
     end
 
 
