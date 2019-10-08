@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_08_135525) do
+ActiveRecord::Schema.define(version: 2019_10_08_182248) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -105,11 +105,11 @@ ActiveRecord::Schema.define(version: 2019_10_08_135525) do
   create_table "vidcomments", force: :cascade do |t|
     t.string "comment"
     t.bigint "user_id", null: false
-    t.bigint "podcast_id", null: false
+    t.bigint "video_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["podcast_id"], name: "index_vidcomments_on_podcast_id"
     t.index ["user_id"], name: "index_vidcomments_on_user_id"
+    t.index ["video_id"], name: "index_vidcomments_on_video_id"
   end
 
   create_table "videohistories", force: :cascade do |t|
@@ -145,8 +145,8 @@ ActiveRecord::Schema.define(version: 2019_10_08_135525) do
   add_foreign_key "podcomments", "users"
   add_foreign_key "subscriptions", "channels"
   add_foreign_key "subscriptions", "users"
-  add_foreign_key "vidcomments", "podcasts"
   add_foreign_key "vidcomments", "users"
+  add_foreign_key "vidcomments", "videos"
   add_foreign_key "videohistories", "users"
   add_foreign_key "videohistories", "videos"
   add_foreign_key "videos", "channels"
