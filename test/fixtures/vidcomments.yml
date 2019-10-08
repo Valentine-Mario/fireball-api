@@ -3,9 +3,9 @@
 one:
   comment: MyString
   user: one
-  podcast: one
+  video: one
 
 two:
   comment: MyString
   user: two
-  podcast: two
+  video: two

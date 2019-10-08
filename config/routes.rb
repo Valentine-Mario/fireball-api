@@ -75,4 +75,10 @@ Rails.application.routes.draw do
     get '/delete/:id', :to=>'podcastcomment#deleteComment'
     get '/get/:token', :to=>'podcastcomment#getCommentinPodcast'
   end
+
+  scope 'vidcomment' do
+    post '/add/:id', :to=>'videocomment#addComment'
+    get '/delete/:id', :to=>'videocomment#deleteComment'
+    get '/get/:token', :to=>'videocomment#getCommentinVideo'
+  end
 end
