@@ -54,6 +54,9 @@ class PodcastController < ApplicationController
 
     def deletePodcast
         if @current_user.suspended==false
+            for i in @podcast.podcomments do
+                i.destroy
+            end
             @podcast.pod.purge
             @podcast.destroy
             render :json=>{code:"00", message:"podcast deleted successfully"}, status: :ok

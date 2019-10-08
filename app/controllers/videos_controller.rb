@@ -51,6 +51,9 @@ class VideosController < ApplicationController
 
     def deleteVideo
         if @current_user.suspended==false
+            for i in @video.vidcomments do
+                i.destroy
+            end
             @video.vid.purge
             @video.destroy
             render :json=>{code:"00", message:"video deleted successfully"}, status: :ok

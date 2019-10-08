@@ -73,6 +73,7 @@ class UserController < ApplicationController
         end
     end
 
+    #todo: remeber to delete all user channel, podcast, videos, comments and replies on delteion
     def deleteUser
         @current_user.avatar.purge
         if @current_user.destroy
