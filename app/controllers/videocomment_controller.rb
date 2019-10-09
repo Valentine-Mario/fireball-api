@@ -9,6 +9,7 @@ class VideocommentController < ApplicationController
             @comment= Vidcomment.new(postParam)
             @comment.user_id=@current_user.id
             @comment.video_id=@video.id
+           
             if @comment.save
                 render :json=>{code:"00", message:@comment}.to_json(:include=>[:user]), status: :ok
             else
@@ -21,6 +22,9 @@ class VideocommentController < ApplicationController
 
     def deleteComment
         if @current_user.suspended==false
+            for i in @comment.videoreplies do
+                i.destroy
+            end
             @comment.destroy
             render :json=>{code:"00", message:"comment deleted successfully"}, status: :ok
         else
@@ -31,7 +35,7 @@ class VideocommentController < ApplicationController
     def getCommentinVideo
         @comments= @video.vidcomments.paginate(page: params[:page], per_page: params[:per_page])
         total=@comments.total_entries
-        render :json=>{code:"00", message:@comments, total:total}.to_json(:include=>[:user]), status: :ok
+        render :json=>{code:"00", message:@comments, total:total}.to_json(:include=>[:user,  :videoreplies]), status: :ok
     end
 
     private

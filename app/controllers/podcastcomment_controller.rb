@@ -22,6 +22,9 @@ class PodcastcommentController < ApplicationController
 
     def deleteComment
         if @current_user.suspended==false
+            for i in @comment.podcastreplies do
+                i.destroy
+            end
             @comment.destroy
             render :json=>{code:"00", message:"comment deleted successfully"}, status: :ok
         else
@@ -32,7 +35,7 @@ class PodcastcommentController < ApplicationController
     def getCommentinPodcast
         @comments= @podcast.podcomments.paginate(page: params[:page], per_page: params[:per_page])
         total=@comments.total_entries
-        render :json=>{code:"00", message:@comments, total:total}.to_json(:include=>[:user]), status: :ok
+        render :json=>{code:"00", message:@comments, total:total}.to_json(:include=>[:user, :podcastreplies ]), status: :ok
     end
 
 
