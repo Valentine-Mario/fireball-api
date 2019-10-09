@@ -6,8 +6,8 @@ We believe that knowledge is free and should be accessible to anyone irrespectiv
 ### setup
 * clone the repostiory
 * create a new branch and checkout to that new branch
-* create a **local_env_.yml** in the **config** directory to store your enviromental    variables
-* the **local_env_.yml** file should have the following:
+* create a **local_env.yml** in the **config** directory to store your enviromental    variables
+* the **local_env.yml** file should have the following:
     DB_NAME: database name
     DB_PASSWORD: database password
     AMAZON_API_KEY:amazone s3 api key

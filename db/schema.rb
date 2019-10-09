@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_08_182248) do
+ActiveRecord::Schema.define(version: 2019_10_09_185440) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,6 +55,16 @@ ActiveRecord::Schema.define(version: 2019_10_08_182248) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["podcast_id"], name: "index_podcasthistories_on_podcast_id"
     t.index ["user_id"], name: "index_podcasthistories_on_user_id"
+  end
+
+  create_table "podcastreplies", force: :cascade do |t|
+    t.string "comment"
+    t.bigint "user_id", null: false
+    t.bigint "podcomment_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["podcomment_id"], name: "index_podcastreplies_on_podcomment_id"
+    t.index ["user_id"], name: "index_podcastreplies_on_user_id"
   end
 
   create_table "podcasts", force: :cascade do |t|
@@ -121,6 +131,16 @@ ActiveRecord::Schema.define(version: 2019_10_08_182248) do
     t.index ["video_id"], name: "index_videohistories_on_video_id"
   end
 
+  create_table "videoreplies", force: :cascade do |t|
+    t.string "comment"
+    t.bigint "user_id", null: false
+    t.bigint "vidcomment_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_videoreplies_on_user_id"
+    t.index ["vidcomment_id"], name: "index_videoreplies_on_vidcomment_id"
+  end
+
   create_table "videos", force: :cascade do |t|
     t.string "title"
     t.string "description"
@@ -139,6 +159,8 @@ ActiveRecord::Schema.define(version: 2019_10_08_182248) do
   add_foreign_key "channels", "users"
   add_foreign_key "podcasthistories", "podcasts"
   add_foreign_key "podcasthistories", "users"
+  add_foreign_key "podcastreplies", "podcomments"
+  add_foreign_key "podcastreplies", "users"
   add_foreign_key "podcasts", "channels"
   add_foreign_key "podcasts", "users"
   add_foreign_key "podcomments", "podcasts"
@@ -149,6 +171,8 @@ ActiveRecord::Schema.define(version: 2019_10_08_182248) do
   add_foreign_key "vidcomments", "videos"
   add_foreign_key "videohistories", "users"
   add_foreign_key "videohistories", "videos"
+  add_foreign_key "videoreplies", "users"
+  add_foreign_key "videoreplies", "vidcomments"
   add_foreign_key "videos", "channels"
   add_foreign_key "videos", "users"
 end
