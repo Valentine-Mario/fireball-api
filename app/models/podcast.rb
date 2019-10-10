@@ -10,6 +10,7 @@ class Podcast < ApplicationRecord
   validates :pod, attached: true , content_type: ['audio/mpeg', 'audio/x-mpeg', 'audio/mp3', 'audio/x-mp3', 'audio/mpeg3', 'audio/x-mpeg3', 'audio/mpg', 'audio/x-mpg', 'audio/x-mpegaudio', 'audio/x-wav', 'audio/x-wave']
   has_many :podcasthistories, dependent: :destroy
   has_many :podcomments, dependent: :destroy
+  has_many :report_podcasts, dependent: :destroy
 
   def set_defaults 
       self.suspended = false

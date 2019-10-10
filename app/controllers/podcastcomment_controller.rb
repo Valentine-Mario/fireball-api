@@ -35,7 +35,7 @@ class PodcastcommentController < ApplicationController
     def getCommentinPodcast
         @comments= @podcast.podcomments.paginate(page: params[:page], per_page: params[:per_page])
         total=@comments.total_entries
-        render :json=>{code:"00", message:@comments, total:total}.to_json(:include=>[:user, :podcastreplies ]), status: :ok
+        render :json=>{code:"00", message:@comments, total:total}.to_json(:include=>{:user=>{}, :podcastreplies=>{include: :user}}), status: :ok
     end
 
 

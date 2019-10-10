@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_09_185440) do
+ActiveRecord::Schema.define(version: 2019_10_10_092848) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -91,6 +91,26 @@ ActiveRecord::Schema.define(version: 2019_10_09_185440) do
     t.index ["user_id"], name: "index_podcomments_on_user_id"
   end
 
+  create_table "report_podcasts", force: :cascade do |t|
+    t.string "report"
+    t.bigint "user_id", null: false
+    t.bigint "podcast_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["podcast_id"], name: "index_report_podcasts_on_podcast_id"
+    t.index ["user_id"], name: "index_report_podcasts_on_user_id"
+  end
+
+  create_table "report_videos", force: :cascade do |t|
+    t.string "report"
+    t.bigint "user_id", null: false
+    t.bigint "video_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_report_videos_on_user_id"
+    t.index ["video_id"], name: "index_report_videos_on_video_id"
+  end
+
   create_table "subscriptions", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "channel_id", null: false
@@ -165,6 +185,10 @@ ActiveRecord::Schema.define(version: 2019_10_09_185440) do
   add_foreign_key "podcasts", "users"
   add_foreign_key "podcomments", "podcasts"
   add_foreign_key "podcomments", "users"
+  add_foreign_key "report_podcasts", "podcasts"
+  add_foreign_key "report_podcasts", "users"
+  add_foreign_key "report_videos", "users"
+  add_foreign_key "report_videos", "videos"
   add_foreign_key "subscriptions", "channels"
   add_foreign_key "subscriptions", "users"
   add_foreign_key "vidcomments", "users"

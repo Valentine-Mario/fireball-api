@@ -19,6 +19,8 @@ class User < ApplicationRecord
             has_many :podcomments, dependent: :destroy
             has_many :videoreplies, dependent: :destroy
             has_many :podcastreplies, dependent: :destroy
+            has_many :report_podcasts, dependent: :destroy
+            has_many :report_videos, dependent: :destroy
 
             validates :email, presence: true, uniqueness: true
             validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }

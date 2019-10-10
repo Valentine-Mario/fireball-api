@@ -91,4 +91,9 @@ Rails.application.routes.draw do
     post '/add/:id', :to=>'podcastreply#replyTocomment'
     get '/delete/:id', :to=>'podcastreply#deleteReply'
   end
+
+  scope 'report' do
+    post '/video/:id', :to=>'report#reportVideo'
+    post '/podcast/:id', :to=>'report#reportPodcast'
+  end
 end
