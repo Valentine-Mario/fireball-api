@@ -32,10 +32,13 @@ class ChannelsController < ApplicationController
         else
            @channel= Channel.paginate(page: params[:page], per_page: params[:per_page]).where(user_id: @current_user.id)
            total=@channel.total_entries
-           render :json=>{code:"00", message:@channel, total:total}, status: :ok
+           arr=[]
+            for i in @channel do
+                pics= rails_blob_url(i.image)
+                arr.push({images:pics, content:i})   
+            end
+           render :json=>{code:"00", message:arr, total:total}, status: :ok
         end
-        #using include would not allow pagination
-        #render :json=>{code:"00", message:@current_user, pics:pics}.to_json(:include=>{:channels=>{}}), status: :ok
     end
 
 
@@ -44,8 +47,12 @@ class ChannelsController < ApplicationController
         
         @channel= Channel.paginate(page: params[:page], per_page: params[:per_page]).where(user_id: @user.id)
         total=@channel.total_entries
-        
-        render :json=>{code:"00", message:@channel, total:total}, status: :ok
+        arr=[]
+            for i in @channel do
+                pics= rails_blob_url(i.image)
+                arr.push({images:pics, content:i})   
+            end
+        render :json=>{code:"00", message:arr, total:total}, status: :ok
 
     end
 
