@@ -3,7 +3,8 @@ class ChannelsController < ApplicationController
 
     before_action :authorize_request, except:[:getChannelOfUser, :getChannelByToken]
     before_action :findUser, only:[:getChannelOfUser]
-    before_action :set_post_user, only:[:editChannel, :deleteChannel, :getSubscribersToYourChannel]
+    before_action :set_post_user, only:[:editChannel, :deleteChannel,
+         :getSubscribersToYourChannel, :updateChannelImage]
     before_action :findChannel, only:[:getChannelByToken, :checkSubscription]
 
 
@@ -67,7 +68,7 @@ class ChannelsController < ApplicationController
 
     def getChannelByToken
         user=User.where(id:@channel.user_id)
-        render :json=>{code:"00", message:@channel, user_pics:rails_blob_url(user[0].avatar), user:user[0], subscribers:@channel.subscriptions.length}.to_json(:include=>{:user=>{}}), status: :ok
+        render :json=>{code:"00", channel_pics:rails_blob_url(@channel.image) , message:@channel, user_pics:rails_blob_url(user[0].avatar), user:user[0], subscribers:@channel.subscriptions.length}.to_json(:include=>{:user=>{}}), status: :ok
     end
 
 
@@ -86,6 +87,7 @@ class ChannelsController < ApplicationController
                     i.destroy
                 end
             end
+            @post.image.purge
             @post.destroy
             render :json=>{code:"00", message:"channel deleted successfully"}, status: :ok
         else
@@ -98,7 +100,13 @@ class ChannelsController < ApplicationController
     def getAllChannels
             @channel= Channel.paginate(page: params[:page], per_page: params[:per_page]).order("created_at DESC")
             @total=@channel.total_entries
-            render :json=>{code:"00", message:@channel, total:@total}.to_json(:include=>{:user=>{}}), status: :ok
+            arr=[]
+            for i in @channel do
+                @user_details=User.find(i.user_id)
+                pics= rails_blob_url(i.image)
+                arr.push({images:pics, content:i, user:@user_details})   
+            end
+            render :json=>{code:"00", message:arr, total:@total}, status: :ok
     end
 
 
@@ -106,7 +114,13 @@ class ChannelsController < ApplicationController
     def searchChannel
         @channels = Channel.paginate(page: params[:page], per_page: params[:per_page]).where("name LIKE ? OR description LIKE ?", "%#{params[:any]}%", "%#{params[:any]}%").order("created_at DESC")
         @total=@channels.total_entries
-        render :json=>{code:"00", message:@channels, total:@total}.to_json(:include=>{:user=>{}}), status: :ok
+        arr=[]
+            for i in @channels do
+                @user_details=User.find(i.user_id)
+                pics= rails_blob_url(i.image)
+                arr.push({images:pics, content:i, user:@user_details})   
+            end
+        render :json=>{code:"00", message:arr, total:@total}, status: :ok
 
     end
 
@@ -130,11 +144,24 @@ class ChannelsController < ApplicationController
         end
     end
 
+    def updateChannelImage
+        if @current_user.suspended==false
+            @post.image.purge
+                if  @post.image.attach(params[:image])
+                    render :json=>{code:"00", message:"image updated successfully", image:rails_blob_url(@post.image)}, status: :ok
+                else
+                    render :json=>{code:"01", message:"error updating image"}
+                end
+        else
+            render :json=>{code:"01", message:"account has been suspended"}, status: :unauthorized
+        end
+    end
+
     private
 
     def create_params
         params.permit(
-           :name, :description, :content
+           :name, :description, :content, :image
           )
     end
 
