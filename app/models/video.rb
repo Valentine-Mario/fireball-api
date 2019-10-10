@@ -10,7 +10,9 @@ class Video < ApplicationRecord
   validates :vid, attached: true , content_type: ['video/mp4', 'video/3gpp', 'video/x-msvideo', 'video/x-flv', 'video/x-matroska', 'video/quicktime']
   has_many :videohistories, dependent: :destroy
   has_many :vidcomments, dependent: :destroy
+  has_many :report_videos, dependent: :destroy
 
+  
   def set_defaults 
     self.suspended = false
   end

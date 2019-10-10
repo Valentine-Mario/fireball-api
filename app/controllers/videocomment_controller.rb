@@ -35,7 +35,7 @@ class VideocommentController < ApplicationController
     def getCommentinVideo
         @comments= @video.vidcomments.paginate(page: params[:page], per_page: params[:per_page])
         total=@comments.total_entries
-        render :json=>{code:"00", message:@comments, total:total}.to_json(:include=>[:user,  :videoreplies]), status: :ok
+        render :json=>{code:"00", message:@comments, total:total}.to_json(:include=>{:user=>{},  :videoreplies=>{include: :user}}), status: :ok
     end
 
     private
