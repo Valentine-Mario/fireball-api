@@ -2,6 +2,9 @@ class Channel < ApplicationRecord
   belongs_to :user
   has_secure_token :token_channel
   before_create :set_token
+  has_one_attached :image
+  validates :image, attached: true, content_type: ['image/png', 'image/jpg', 'image/jpeg']
+
   validates :content, numericality: { only_integer: true }
   validates :name, presence: true
   validates :description, presence:true

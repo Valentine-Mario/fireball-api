@@ -39,7 +39,8 @@ Rails.application.routes.draw do
     get '/getall', :to=>'channels#getAllChannels'
     get '/search/:any', :to=>'channels#searchChannel'
     get '/getyoursub/:id', :to=>'channels#getSubscribersToYourChannel'
-    get '/checkusersub/:token_channel', :to=>'channel#checkSubscription'
+    get '/checkusersub/:token_channel', :to=>'channels#checkSubscription'
+    post '/updateimage/:id', :to=>'channels#updateChannelImage'
   end
 
   scope 'sub' do
