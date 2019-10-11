@@ -164,6 +164,31 @@ class ChannelsController < ApplicationController
         end
     end
 
+
+    def getPodcastChannel
+        @channels=Channel.paginate(page: params[:page], per_page: params[:per_page]).where(content: 1)
+        @total=@channels.total_entries
+        arr=[]
+            for i in @channels do
+                @user_details=User.find(i.user_id)
+                pics= rails_blob_url(i.image)
+                arr.push({images:pics, content:i, user:@user_details})   
+            end
+        render :json=>{code:"00", message:arr, total:@total}, status: :ok
+    end
+
+    def getVideoChannel
+        @channels=Channel.paginate(page: params[:page], per_page: params[:per_page]).where(content: 2)
+        @total=@channels.total_entries
+        arr=[]
+            for i in @channels do
+                @user_details=User.find(i.user_id)
+                pics= rails_blob_url(i.image)
+                arr.push({images:pics, content:i, user:@user_details})   
+            end
+        render :json=>{code:"00", message:arr, total:@total}, status: :ok
+    end
+
     private
 
     def create_params
