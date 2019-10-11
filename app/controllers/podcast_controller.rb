@@ -34,10 +34,9 @@ class PodcastController < ApplicationController
 
 
     def getPodCastInChannel
-        @podcast=@channel.podcasts.paginate(page: params[:page], per_page: params[:per_page]).where(suspended: false)
-        total=@podcast.total_entries
+        @podcast=@channel.podcasts.where(suspended: false)
         
-        render :json=>{code:"00", message:@podcast, channel:@channel, total:total}, status: :ok
+        render :json=>{code:"00", message:@podcast, channel:@channel}, status: :ok
     end
 
     def editPodcast

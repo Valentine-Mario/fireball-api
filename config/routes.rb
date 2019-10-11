@@ -99,4 +99,15 @@ Rails.application.routes.draw do
     post '/video/:id', :to=>'report#reportVideo'
     post '/podcast/:id', :to=>'report#reportPodcast'
   end
+
+  scope 'bookmark' do
+    get '/video/:id', :to=>'bookmark#BookmarkVideo'
+    get '/podcast/:id', :to=>'bookmark#BookmarkPodcast'
+    get '/videoget', :to=>'bookmark#UserVideoBookmarks'
+    get '/podcastget', :to=>'bookmark#UserPodcastBookmarks'
+    get '/checkvideo/:token', :to=>'bookmark#checkVideoBookmark' 
+    get '/checkpodcast/:token', :to=>'bookmark#checkPodcastBookmark'
+    get '/removevideo/:id', :to=>'bookmark#removeVideoBookmark'
+    get '/removepodcast/:id', :to=>'bookmark#removedPodcastBookmark'
+  end
 end

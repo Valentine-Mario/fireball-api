@@ -39,6 +39,7 @@ class UserController < ApplicationController
 
     def removePics
         if @current_user.suspended==false
+            @current_user.avatar.purge
             @current_user.avatar.attach(io: File.open(Rails.root.join("app", "assets", "images", "default.png")), filename: 'default.png' , content_type: "image/png")
             render :json=>{code:"00", message:"profile pics removed successfully"}
         else
