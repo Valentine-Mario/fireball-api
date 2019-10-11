@@ -8,7 +8,7 @@ We believe that knowledge is free and should be accessible to anyone irrespectiv
 * create a new branch and checkout to that new branch
 * create a **local_env.yml** in the **config** directory to store your enviromental    variables
 * the **local_env.yml** file should have the following:  
-    DB_NAME: database name  
+    DB_NAME: database username  
     DB_PASSWORD: database password  
     AMAZON_API_KEY:amazone s3 api key  
     AMAZON_SECRET_KEY: amazone s3 secret key  
