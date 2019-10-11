@@ -14,6 +14,7 @@ class Podcast < ApplicationRecord
 
   def set_defaults 
       self.suspended = false
+      self.listens=0
     end
   private
         def set_token

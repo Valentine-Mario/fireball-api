@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_10_092848) do
+ActiveRecord::Schema.define(version: 2019_10_11_093138) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,6 +53,7 @@ ActiveRecord::Schema.define(version: 2019_10_10_092848) do
     t.bigint "podcast_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "listens"
     t.index ["podcast_id"], name: "index_podcasthistories_on_podcast_id"
     t.index ["user_id"], name: "index_podcasthistories_on_user_id"
   end
@@ -76,6 +77,7 @@ ActiveRecord::Schema.define(version: 2019_10_10_092848) do
     t.boolean "suspended"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "listens"
     t.index ["channel_id"], name: "index_podcasts_on_channel_id"
     t.index ["token"], name: "index_podcasts_on_token", unique: true
     t.index ["user_id"], name: "index_podcasts_on_user_id"
@@ -147,6 +149,7 @@ ActiveRecord::Schema.define(version: 2019_10_10_092848) do
     t.bigint "video_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "viewed"
     t.index ["user_id"], name: "index_videohistories_on_user_id"
     t.index ["video_id"], name: "index_videohistories_on_video_id"
   end
@@ -170,6 +173,7 @@ ActiveRecord::Schema.define(version: 2019_10_10_092848) do
     t.string "token"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "views"
     t.index ["channel_id"], name: "index_videos_on_channel_id"
     t.index ["token"], name: "index_videos_on_token", unique: true
     t.index ["user_id"], name: "index_videos_on_user_id"
