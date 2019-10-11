@@ -66,6 +66,7 @@ class PodcastController < ApplicationController
     end
 
     def ListenToPodcast
+        #when user open podcast, it increment the podcast count and adds listen history to table. If histpry already exist, increment history count
        @podcasts= Podcast.find_by_token!(params[:token])
         if @podcasts.suspended==false
             @podcast_history=Podcasthistory.where(user_id:@current_user.id, podcast_id:@podcasts.id)

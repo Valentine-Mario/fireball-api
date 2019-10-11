@@ -70,6 +70,7 @@ class VideosController < ApplicationController
 
 
     def getVideoByToken
+        #when user open video, it increment the video count and adds view history to table. If histpry already exist, increment history count
         @video= Video.find_by_token!(params[:token])
         if @video.suspended==false
             @video_history=Videohistory.where(user_id:@current_user.id, video_id:@video.id)
