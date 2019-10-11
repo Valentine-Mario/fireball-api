@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_11_093138) do
+ActiveRecord::Schema.define(version: 2019_10_11_151030) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,6 +46,15 @@ ActiveRecord::Schema.define(version: 2019_10_11_093138) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["token_channel"], name: "index_channels_on_token_channel", unique: true
     t.index ["user_id"], name: "index_channels_on_user_id"
+  end
+
+  create_table "podcast_bookmarks", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "podcast_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["podcast_id"], name: "index_podcast_bookmarks_on_podcast_id"
+    t.index ["user_id"], name: "index_podcast_bookmarks_on_user_id"
   end
 
   create_table "podcasthistories", force: :cascade do |t|
@@ -144,6 +153,15 @@ ActiveRecord::Schema.define(version: 2019_10_11_093138) do
     t.index ["video_id"], name: "index_vidcomments_on_video_id"
   end
 
+  create_table "video_bookmarks", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "video_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_video_bookmarks_on_user_id"
+    t.index ["video_id"], name: "index_video_bookmarks_on_video_id"
+  end
+
   create_table "videohistories", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "video_id", null: false
@@ -181,6 +199,8 @@ ActiveRecord::Schema.define(version: 2019_10_11_093138) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "channels", "users"
+  add_foreign_key "podcast_bookmarks", "podcasts"
+  add_foreign_key "podcast_bookmarks", "users"
   add_foreign_key "podcasthistories", "podcasts"
   add_foreign_key "podcasthistories", "users"
   add_foreign_key "podcastreplies", "podcomments"
@@ -197,6 +217,8 @@ ActiveRecord::Schema.define(version: 2019_10_11_093138) do
   add_foreign_key "subscriptions", "users"
   add_foreign_key "vidcomments", "users"
   add_foreign_key "vidcomments", "videos"
+  add_foreign_key "video_bookmarks", "users"
+  add_foreign_key "video_bookmarks", "videos"
   add_foreign_key "videohistories", "users"
   add_foreign_key "videohistories", "videos"
   add_foreign_key "videoreplies", "users"

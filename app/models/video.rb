@@ -11,6 +11,7 @@ class Video < ApplicationRecord
   has_many :videohistories, dependent: :destroy
   has_many :vidcomments, dependent: :destroy
   has_many :report_videos, dependent: :destroy
+  has_many :video_bookmarks, dependent: :destroy
 
   
   def set_defaults 

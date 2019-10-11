@@ -32,9 +32,8 @@ class VideosController < ApplicationController
 
 
     def getVideoInChannel
-        @videos=@channel.videos.paginate(page: params[:page], per_page: params[:per_page]).where(suspended: false)
-        total=@videos.total_entries  
-        render :json=>{code:"00", message:@videos, channel:@channel, total:total}, status: :ok
+        @videos=@channel.where(suspended: false)
+        render :json=>{code:"00", message:@videos, channel:@channel}, status: :ok
     end
 
     def editVideo
