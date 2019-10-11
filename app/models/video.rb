@@ -15,6 +15,7 @@ class Video < ApplicationRecord
   
   def set_defaults 
     self.suspended = false
+    self.views=0
   end
 private
       def set_token

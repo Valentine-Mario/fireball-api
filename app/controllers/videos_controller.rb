@@ -72,11 +72,17 @@ class VideosController < ApplicationController
     def getVideoByToken
         @video= Video.find_by_token!(params[:token])
         if @video.suspended==false
-            @vid_history=@video.videohistories.create 
-            @vid_history.user_id=@current_user.id
-            @vid_history.save
+            @video_history=Videohistory.where(user_id:@current_user.id, video_id:@video.id)
+            if @video_history.length>0
+                @video_history[0].increment!(:viewed, by=1)
+            else
+                @vid_history=@video.videohistories.create 
+                @vid_history.user_id=@current_user.id
+                @vid_history.save
+            end
             vid_link=rails_blob_url(@video.vid)
-            render :json=>{code:"00", message:@video, video:vid_link, views:@video.videohistories.length}.to_json(:include=>[:channel, :user]), status: :ok
+            @video.increment!(:views, by=1)
+            render :json=>{code:"00", message:@video, video:vid_link}.to_json(:include=>[:channel, :user]), status: :ok
         else
             render :json=>{code:"01", message:"this video has been suspended"}, status: :unauthorized
         end

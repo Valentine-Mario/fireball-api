@@ -68,11 +68,17 @@ class PodcastController < ApplicationController
     def ListenToPodcast
        @podcasts= Podcast.find_by_token!(params[:token])
         if @podcasts.suspended==false
-            @pod_history=@podcasts.podcasthistories.create 
-            @pod_history.user_id=@current_user.id
-            @pod_history.save
+            @podcast_history=Podcasthistory.where(user_id:@current_user.id, podcast_id:@podcasts.id)
+            if @podcast_history.length>0
+                @podcast_history[0].increment!(:listens, by=1)
+            else
+                @pod_history=@podcasts.podcasthistories.create 
+                @pod_history.user_id=@current_user.id
+                @pod_history.save
+            end
+            @podcasts.increment!(:listens, by=1)
             pod=rails_blob_url(@podcasts.pod)
-            render :json=>{code:"00", message:@podcasts, podcast:pod, listens:@podcasts.podcasthistories.length}.to_json(:include=>[:channel, :user]), status: :ok 
+            render :json=>{code:"00", message:@podcasts, podcast:pod}.to_json(:include=>[:channel, :user]), status: :ok 
         else
             render :json=>{code:"01", message:"podcast has been suspeded"}, status: :unauthorized
         end
