@@ -1,7 +1,8 @@
 class UserController < ApplicationController
     include Rails.application.routes.url_helpers
     before_action :authorize_request, only: [:getProfile, :addPics, :removePics, 
-        :editPassword, :deleteUser, :editUser, :getPodcastHistory, :getVideoHostory]
+        :editPassword, :deleteUser, :editUser, :getPodcastHistory, 
+        :getVideoHostory, :getNotificationVideo, :getNotificationPodcast]
     before_action :findUser, only:[:getUserByToken]
 
     def createUser
@@ -117,6 +118,24 @@ class UserController < ApplicationController
     end
 
 
+    def getNotificationVideo
+        @video_notification= VideoNotification.where(user_id:@current_user.id).order("created_at DESC")
+        render :json=>{code:"00", message:@video_notification, unviewed:VideoNotification.where(user_id:@current_user.id, viewed:false).length + PodcastNotification.where(user_id:@current_user.id, viewed:false).length }.to_json(:include=>[:video]), status: :ok
+        for i in VideoNotification.where(user_id:@current_user.id, viewed:false) do
+            i.update(setTrue)
+        end
+        
+    end
+
+    def getNotificationPodcast
+        @podcast_notification= PodcastNotification.where(user_id:@current_user.id).order("created_at DESC")
+        render :json=>{code:"00", message:@podcast_notification}.to_json(:include=>[:podcast]), status: :ok
+        for j in PodcastNotification.where(user_id:@current_user.id, viewed:false) do
+            j.update(setTrue)
+        end
+    end
+
+
 
 private
 
@@ -147,4 +166,10 @@ def resetPassword
     defaults={password:@a}
     params.permit(:password).reverse_merge(defaults)
 end
+
+def setTrue
+    defaults = { viewed: true }
+    params.permit(:viewed).reverse_merge(defaults)
+end
+
 end

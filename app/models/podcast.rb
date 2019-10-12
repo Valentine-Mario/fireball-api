@@ -12,6 +12,8 @@ class Podcast < ApplicationRecord
   has_many :podcomments, dependent: :destroy
   has_many :report_podcasts, dependent: :destroy
   has_many :podcast_bookmarks, dependent: :destroy
+  has_many :podcast_notifications, dependent: :destroy
+
 
   def set_defaults 
       self.suspended = false
