@@ -13,6 +13,8 @@ Rails.application.routes.draw do
     post '/forgotpassword', :to=>'user#forgotPassword'
     get '/podcast/history', :to=>'user#getPodcastHistory'
     get '/video/history', :to=>'user#getVideoHostory'
+    get '/notifvideo', :to=>'user#getNotificationVideo'
+    get '/notifpodcast', :to=>'user#getNotificationPodcast'
   end
 
 

@@ -12,6 +12,11 @@ class VideocommentController < ApplicationController
            
             if @comment.save
                 render :json=>{code:"00", message:@comment}.to_json(:include=>[:user]), status: :ok
+               @video_notif= VideoNotification.new()
+               @video_notif.user_id=@video.user_id
+               @video_notif.video_id=@video.id
+               @video_notif.message=@current_user.name+" commented on your video"
+               @video_notif.save
             else
                 render :json=>{code:"01", message:"error creating comment"}, status: :unprocessable_entity
             end
