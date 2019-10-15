@@ -23,13 +23,8 @@ Rails.application.routes.draw do
     post '/admin', :to=>'auth#adminLogin'
   end
 
-  scope 'admin' do
-    get '/makeadmin/:id', :to=>'admin#makeAdmin'
-    get '/removeadmin/:id', :to=>'admin#removeAdmin'
-    get '/getusers', :to=>'admin#getAllUsers'
-    get '/suspend/:id', :to=>'admin#suspendUser'
-    get 'unsuspend/:id', :to=>'admin#unsuspendUser'
-  end
+  
+  
 
   scope 'channel' do
     post '/add', :to=>'channels#createChannel'
@@ -112,4 +107,19 @@ Rails.application.routes.draw do
     get '/removevideo/:id', :to=>'bookmark#removeVideoBookmark'
     get '/removepodcast/:id', :to=>'bookmark#removedPodcastBookmark'
   end
+
+  namespace :admin do
+    get '/getusers', :to => "admin#getAllUsers"
+    get '/makeadmin/:id', :to=>'admin#makeAdmin'
+    get '/removeadmin/:id', :to=>'admin#removeAdmin'
+    get '/suspend/:id', :to=>'admin#suspendUser'
+    get '/unsuspend/:id', :to=>'admin#unsuspendUser'
+    get '/suspendvideo/:id', :to=>'uploads#suspend_video'
+    get '/unsuspendvideo/:id', :to=>'uploads#unsuspend_video'
+    get '/suspendpodcast/:id', :to=>'uploads#suspend_podcast'
+    get 'unsuspendpodcast/:id', :to=>'uploads#unsuspend_podcast'
+    get '/videoreport/:token', :to=>'reports#getVideoReport'
+    get '/podcastreport/:token', :to=>'reports#getPodcastReport'
+  end
+
 end

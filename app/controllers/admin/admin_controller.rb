@@ -1,6 +1,6 @@
-class AdminController < ApplicationController
+class Admin::AdminController < ApplicationController
     include Rails.application.routes.url_helpers
-    before_action :authorize_request, except: []
+    before_action :authorize_request
     before_action :findUser, except:[:getAllUsers]
 
     def makeAdmin
