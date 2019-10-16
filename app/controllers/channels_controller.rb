@@ -84,19 +84,12 @@ class ChannelsController < ApplicationController
         #todo: delete all the content in the channel when you create content model
         if @current_user.suspended==false
             if @post.content==1
-                for i in @post.podcasts do
-                    i.pod.purge
-                    i.destroy
-                end
+                DeletepodcastchannelJob.perform_later(@post)
             elsif @post.content==2
-                for i in @post.videos do
-                    i.vid.purge
-                    i.destroy
-                end
+                DeletevideochannelJob.perform_later(@post)
             end
-            @post.image.purge
-            @post.destroy
-            render :json=>{code:"00", message:"channel deleted successfully"}, status: :ok
+            
+            render :json=>{code:"00", message:"channel deletion processing"}, status: :ok
         else
             render :json=>{code:"01", message:"your account has been suspended"}, status: :unauthorized
         end

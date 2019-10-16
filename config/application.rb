@@ -41,5 +41,6 @@ module Fireball
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+    config.active_job.queue_adapter = :sidekiq
   end
 end

@@ -8,6 +8,7 @@ class VideosController < ApplicationController
     def createVideo
         if @current_user.suspended==false
             if @channel.content == 2
+                
                 @post=Video.new(postParam)
                 @post.user_id=@current_user.id
                 @post.channel_id=@channel.id
@@ -32,7 +33,7 @@ class VideosController < ApplicationController
 
 
     def getVideoInChannel
-        @videos=@channel.where(suspended: false)
+        @videos=@channel.videos.where(suspended: false)
         render :json=>{code:"00", message:@videos, channel:@channel}, status: :ok
     end
 
@@ -50,12 +51,8 @@ class VideosController < ApplicationController
 
     def deleteVideo
         if @current_user.suspended==false
-            for i in @video.vidcomments do
-                i.destroy
-            end
-            @video.vid.purge
-            @video.destroy
-            render :json=>{code:"00", message:"video deleted successfully"}, status: :ok
+            DeleteJob.perform_later(@video)
+            render :json=>{code:"00", message:"video deletion processing"}, status: :ok
         else
             render :json=>{code:"01", message:"account suspended"}, status: :unauthorized
         end
