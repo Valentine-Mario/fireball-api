@@ -75,14 +75,10 @@ class UserController < ApplicationController
         end
     end
 
-    #todo: remeber to delete all user channel, podcast, videos, comments and replies on delteion
     def deleteUser
-        @current_user.avatar.purge
-        if @current_user.destroy
-            render :json=>{message:"user deleted successfully"}, status: :ok
-        else
-            render :json=>{message:"error deleting user"}, status: :unprocessable_entity
-        end
+        DeleteuserJob.perform_later(@current_user)
+        render :json=>{code:"00", message:"user deletion processing"}, status: :ok
+        
     end
 
     def editUser
