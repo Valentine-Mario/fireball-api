@@ -53,12 +53,9 @@ class PodcastController < ApplicationController
 
     def deletePodcast
         if @current_user.suspended==false
-            for i in @podcast.podcomments do
-                i.destroy
-            end
-            @podcast.pod.purge
-            @podcast.destroy
-            render :json=>{code:"00", message:"podcast deleted successfully"}, status: :ok
+            
+            DeletepodcastJob.perform_later(@podcast)
+            render :json=>{code:"00", message:"podcast deletion processing"}, status: :ok
         else
             render :json=>{code:"01", message:"account suspended"}, status: :unauthorized
         end

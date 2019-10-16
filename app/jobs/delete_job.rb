@@ -12,6 +12,7 @@ class DeleteJob < ApplicationJob
        Videohistory.where(video:video.id).destroy_all
        VideoBookmark.where(video:video.id).destroy_all
        VideoNotification.where(video:video.id).destroy_all
+       ReportVideo.where(video:video.id).destroy_all
         video.vid.purge
         video.destroy
   end
