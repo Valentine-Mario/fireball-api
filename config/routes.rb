@@ -57,6 +57,8 @@ Rails.application.routes.draw do
     get '/listen/:token', :to=>'podcast#ListenToPodcast'
     get '/history/:id', :to=>'podcast#viewListenHistory'
     get '/search/:any', :to=>'podcast#searchPodcast'
+    get '/mostlistens', :to=>'podcast#getMostListens'
+    get '/feed', :to=>'podcast#PodcastFeed'
   end
 
   scope 'video' do
@@ -68,6 +70,8 @@ Rails.application.routes.draw do
     get '/search/:any', :to=>'videos#searchVideo'
     get '/getvid/:token', :to=>'videos#getVideoByToken'
     get '/history/:id', :to=>'videos#getViewHistory'
+    get '/mostviews', :to=>'videos#getMostViewed'
+    get '/feed', :to=>'videos#getVideoFeed'
   end
 
   scope 'podcomment' do

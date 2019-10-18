@@ -1,6 +1,6 @@
 class VideosController < ApplicationController
     include Rails.application.routes.url_helpers
-    before_action :authorize_request, only:[:createVideo, :editVideo, :deleteVideo, :getVideoByToken, :getViewHistory]
+    before_action :authorize_request, only:[:createVideo, :editVideo, :deleteVideo, :getVideoByToken, :getViewHistory, :getVideoFeed]
     before_action :getChannel, only:[:createVideo]
     before_action :findChannelByToken, only:[:getVideoInChannel]
     before_action :getVideo, only:[:editVideo, :deleteVideo, :getViewHistory]
@@ -26,7 +26,21 @@ class VideosController < ApplicationController
     end
 
     def getAllVideos
-        @videos=Video.paginate(page: params[:page], per_page: params[:per_page]).where(suspended: false)
+        @videos=Video.paginate(page: params[:page], per_page: params[:per_page]).where(suspended: false).order("created_at DESC")
+        total=@videos.total_entries
+        render :json=>{code:"00", message:@videos, total:total}.to_json(:include=>[:channel]), status: :ok
+    end
+
+    def getMostViewed
+        @videos=Video.paginate(page: params[:page], per_page: params[:per_page]).where(suspended:false).order(views: :desc)
+        total=@videos.total_entries
+        render :json=>{code:"00", message:@videos, total:total}.to_json(:include=>[:channel]), status: :ok
+    end
+
+    def getVideoFeed
+        @sub=Subscription.where(user_id: @current_user.id)
+        sub_channel=@sub.map { |h| h[:channel_id] }
+        @videos=Video.paginate(page: params[:page], per_page: params[:per_page]).where(channel_id:sub_channel).order("created_at DESC")
         total=@videos.total_entries
         render :json=>{code:"00", message:@videos, total:total}.to_json(:include=>[:channel]), status: :ok
     end
