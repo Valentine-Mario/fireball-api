@@ -15,9 +15,10 @@ We believe that knowledge is free and should be accessible to anyone irrespectiv
     BUCKET_NAME: amazone s3 bucket name  
 
 * Be sure to have configured your rails environment to use postgresql. [See postgresql setup for rails](https://www.digitalocean.com/community/tutorials/how-to-set-up-ruby-on-rails-with-postgres).
-* Also setup redis on your device for caching and job queues
+* Also setup redis on your device for caching and job queues, and make sure it's running
 * Run the command **rails db:migraate** to migrate all the table in the databse
 * Run **rails s** to serve your application on the default port 3000 or **rails s --port= new port** to specify a new port
+* run sidekiq with the command **sidekiq -C config/sidekiq.yml**
 * Be sure to be running rails 5.0 and above to use active storage
 * push to your branch
 * thank you

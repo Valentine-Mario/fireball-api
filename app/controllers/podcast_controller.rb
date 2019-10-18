@@ -1,6 +1,6 @@
 class PodcastController < ApplicationController
     include Rails.application.routes.url_helpers
-    before_action :authorize_request, only:[:addPodcast, :editPodcast, :deletePodcast, :ListenToPodcast, :viewListenHistory]
+    before_action :authorize_request, only:[:addPodcast, :editPodcast, :deletePodcast, :ListenToPodcast, :viewListenHistory, :PodcastFeed]
     before_action :getChannel, only:[:addPodcast]
     before_action :findChannelByToken, only:[:getPodCastInChannel]
     before_action :getPodcast, only:[:editPodcast, :deletePodcast, :viewListenHistory]
@@ -32,6 +32,19 @@ class PodcastController < ApplicationController
         render :json=>{code:"00", message:@podcasts, total:total}.to_json(:include=>[:channel]), status: :ok
     end
 
+    def getMostListens
+        @podcast=Podcast.paginate(page: params[:page], per_page: params[:per_page]).where(suspended:false).order(views: :listens)
+        total=@podcast.total_entries
+        render :json=>{code:"00", message:@podcast, total:total}.to_json(:include=>[:channel]), status: :ok
+    end
+
+    def PodcastFeed
+        @sub=Subscription.where(user_id: @current_user.id)
+        sub_channel=@sub.map { |h| h[:channel_id] }
+        @podcast=Podcast.paginate(page: params[:page], per_page: params[:per_page]).where(channel_id:sub_channel).order("created_at DESC")
+        total=@podcast.total_entries
+        render :json=>{code:"00", message:@podcast, total:total}.to_json(:include=>[:channel]), status: :ok
+    end
 
     def getPodCastInChannel
         @podcast=@channel.podcasts.where(suspended: false)
