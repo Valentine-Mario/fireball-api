@@ -13,6 +13,8 @@ We believe that knowledge is free and should be accessible to anyone irrespectiv
     AMAZON_API_KEY:amazone s3 api key  
     AMAZON_SECRET_KEY: amazone s3 secret key  
     BUCKET_NAME: amazone s3 bucket name  
+    GMAIL_ADDRESS: email to be used for mailer function  
+    GMAIL_PASSWORD: your gmail password
 
 * Be sure to have configured your rails environment to use postgresql. [See postgresql setup for rails](https://www.digitalocean.com/community/tutorials/how-to-set-up-ruby-on-rails-with-postgres).
 * Also setup redis on your device for caching and job queues, and make sure it's running
