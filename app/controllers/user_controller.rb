@@ -2,7 +2,7 @@ class UserController < ApplicationController
     include Rails.application.routes.url_helpers
     before_action :authorize_request, only: [:getProfile, :addPics, :removePics, 
         :editPassword, :deleteUser, :editUser, :getPodcastHistory, 
-        :getVideoHostory, :getNotificationVideo, :getNotificationPodcast]
+        :getVideoHostory, :getNotificationVideo, :getNotificationPodcast, :getNotificationLength]
     before_action :findUser, only:[:getUserByToken]
 
     def createUser
@@ -116,7 +116,7 @@ class UserController < ApplicationController
 
     def getNotificationVideo
         @video_notification= VideoNotification.where(user_id:@current_user.id).order("created_at DESC")
-        render :json=>{code:"00", message:@video_notification, unviewed:VideoNotification.where(user_id:@current_user.id, viewed:false).length + PodcastNotification.where(user_id:@current_user.id, viewed:false).length }.to_json(:include=>[:video]), status: :ok
+        render :json=>{code:"00", message:@video_notification }.to_json(:include=>[:video]), status: :ok
         VideoNotification.where(user_id:@current_user.id, viewed:false).update_all(viewed: true) 
     end
 
@@ -124,6 +124,11 @@ class UserController < ApplicationController
         @podcast_notification= PodcastNotification.where(user_id:@current_user.id).order("created_at DESC")
         render :json=>{code:"00", message:@podcast_notification}.to_json(:include=>[:podcast]), status: :ok
         PodcastNotification.where(user_id:@current_user.id, viewed:false).update_all(viewed: true)   
+    end
+
+    def getNotificationLength
+        @length= VideoNotification.where(user_id:@current_user.id, viewed:false).length + PodcastNotification.where(user_id:@current_user.id, viewed:false).length
+        render :json=>{code:"00", message:@length}, status: :ok
     end
 
 
