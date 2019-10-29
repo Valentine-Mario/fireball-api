@@ -15,6 +15,7 @@ Rails.application.routes.draw do
     get '/video/history', :to=>'user#getVideoHostory'
     get '/notifvideo', :to=>'user#getNotificationVideo'
     get '/notifpodcast', :to=>'user#getNotificationPodcast'
+    get '/notilength', :to=>'user#getNotificationLength'
   end
 
 
@@ -40,6 +41,8 @@ Rails.application.routes.draw do
     post '/updateimage/:id', :to=>'channels#updateChannelImage'
     get '/getpodcast', :to=>'channels#getPodcastChannel'
     get '/getvideo', :to=>'channels#getVideoChannel'
+    get '/myvideo', :to=>'channels#getYourVideoChannel'
+    get '/mypodcast', :to=>'channels#getYourPodcastChannel'
   end
 
   scope 'sub' do

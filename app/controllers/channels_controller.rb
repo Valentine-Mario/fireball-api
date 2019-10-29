@@ -30,7 +30,7 @@ class ChannelsController < ApplicationController
         if @current_user.suspended==true
             render :json=>{code:"01", message:"your account has been suspended"}, status: :unauthorized
         else
-           @channel= Channel.paginate(page: params[:page], per_page: params[:per_page]).where(user_id: @current_user.id)
+           @channel= Channel.paginate(page: params[:page], per_page: params[:per_page]).where(user_id: @current_user.id).order("created_at DESC")
            total=@channel.total_entries
            arr=[]
             for i in @channel do
@@ -74,8 +74,7 @@ class ChannelsController < ApplicationController
 
 
     def getChannelByToken
-        user=User.where(id:@channel.user_id)
-        render :json=>{code:"00", channel_pics:rails_blob_url(@channel.image) , message:@channel, user_pics:rails_blob_url(user[0].avatar), user:user[0], subscribers:@channel.subscriptions.length}.to_json(:include=>{:user=>{}}), status: :ok
+        render :json=>{code:"00", channel_pics:rails_blob_url(@channel.image) , message:@channel, subscribers:@channel.subscriptions.length}.to_json(:include=>{:user=>{}}), status: :ok
     end
 
 
@@ -128,7 +127,7 @@ class ChannelsController < ApplicationController
 
 
     def getSubscribersToYourChannel
-        @sub=@post.subscriptions.paginate(page: params[:page], per_page: params[:per_page])
+        @sub=@post.subscriptions.paginate(page: params[:page], per_page: params[:per_page]).order("created_at DESC")
         @total=@sub.total_entries
         render :json=>{code:"00", message:@sub, total:@total}.to_json(:include=>{:user=>{}}), status: :ok
     end
@@ -159,7 +158,7 @@ class ChannelsController < ApplicationController
 
 
     def getPodcastChannel
-        @channels=Channel.paginate(page: params[:page], per_page: params[:per_page]).where(content: 1)
+        @channels=Channel.paginate(page: params[:page], per_page: params[:per_page]).where(content: 1).order("created_at DESC")
         @total=@channels.total_entries
         arr=[]
             for i in @channels do
@@ -171,7 +170,7 @@ class ChannelsController < ApplicationController
     end
 
     def getVideoChannel
-        @channels=Channel.paginate(page: params[:page], per_page: params[:per_page]).where(content: 2)
+        @channels=Channel.paginate(page: params[:page], per_page: params[:per_page]).where(content: 2).order("created_at DESC")
         @total=@channels.total_entries
         arr=[]
             for i in @channels do
@@ -180,6 +179,26 @@ class ChannelsController < ApplicationController
                 arr.push({images:pics, content:i, user:@user_details})   
             end
         render :json=>{code:"00", message:arr, total:@total}, status: :ok
+    end
+
+    def getYourVideoChannel
+        if @current_user.suspended==true
+            render :json=>{code:"01", message:"your account has been suspended"}, status: :unauthorized
+        else
+           @channel= Channel.where(user_id: @current_user.id, content:2)
+           total=@channel.total_entries
+           render :json=>{code:"00", message:@channel, total:total}, status: :ok
+        end
+    end
+
+    def getYourPodcastChannel
+        if @current_user.suspended==true
+            render :json=>{code:"01", message:"your account has been suspended"}, status: :unauthorized
+        else
+           @channel= Channel.where(user_id: @current_user.id, content:1)
+           total=@channel.total_entries
+           render :json=>{code:"00", message:@channel, total:total}, status: :ok
+        end
     end
 
     private

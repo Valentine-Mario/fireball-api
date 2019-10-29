@@ -3,7 +3,7 @@ class WelcomeJob < ApplicationJob
 
   def perform(user)
     # Do something later
-    WelcomeMailer.welcome_email(user).deliver
+    WelcomeMailer.welcome_email(user).deliver_later
 
   end
 end
