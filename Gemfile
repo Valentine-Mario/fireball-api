@@ -44,6 +44,7 @@ group :development do
   gem 'mini_magick', '>= 4.9.5'
   gem 'sidekiq'
   gem 'redis'
+  gem 'rack-cors'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
