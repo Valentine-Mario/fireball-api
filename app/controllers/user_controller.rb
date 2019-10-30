@@ -131,6 +131,13 @@ class UserController < ApplicationController
         render :json=>{code:"00", message:@length}, status: :ok
     end
 
+    def LengthOfUserVideoPodcast
+        @user_length=User.all.length
+        @video_length=Video.all.length
+        @podcast_length=Podcast.all.length
+        render :json=>{code:"00", user:@user_length, video:@video_length, podcast:@podcast_length}
+    end
+
 
 
 private
