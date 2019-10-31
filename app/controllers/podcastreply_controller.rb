@@ -9,11 +9,15 @@ class PodcastreplyController < ApplicationController
             @reply.user_id=@current_user.id
             if @reply.save
                 render :json=>{code:"00", message:@reply}.to_json(:include=>[:user]), status: :ok
-                @podcast_notif= PodcastNotification.new()
-                @podcast_notif.user_id=@comment.user_id
-                @podcast_notif.podcast_id=@comment.podcast_id
-                @podcast_notif.message=@current_user.name+" replied to your comment"
-                @podcast_notif.save
+                if @current_user.id == @comment.user_id
+                    #do nothing
+                else
+                    @podcast_notif= PodcastNotification.new()
+                    @podcast_notif.user_id=@comment.user_id
+                    @podcast_notif.podcast_id=@comment.podcast_id
+                    @podcast_notif.message=@current_user.name+" replied to your comment"
+                    @podcast_notif.save
+                end
             else
                 render :json=>{code:"01", message:"error creating comment"}, status: :unprocessable_entity
             end
