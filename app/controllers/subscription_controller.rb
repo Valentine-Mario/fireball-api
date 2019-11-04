@@ -17,7 +17,7 @@ class SubscriptionController < ApplicationController
             end
 
         else
-            render :json=>{code:"01", message:"your account has been suspended you cannot subscribe to a channel"}, status: :unauthorized
+            render :json=>{code:"01", message:"your account has been suspended you cannot subscribe to a channel"}
         end
     end
 
@@ -26,7 +26,7 @@ class SubscriptionController < ApplicationController
             @subscribe.destroy
             render :json=>{code:"00", message:"unsunscribed successfully"}
         else
-            render :json=>{code:"01", message:"your account has been suspended"}, status: :unauthorized
+            render :json=>{code:"01", message:"your account has been suspended"}
         end
     end
 

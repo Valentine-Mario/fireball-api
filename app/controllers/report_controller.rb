@@ -11,10 +11,10 @@ class ReportController < ApplicationController
            if @report.save
             render :json=>{code:"00", message:"report sent successfully. Thank you"}, status: :ok
            else
-            render :json=>{code:"01", message:"error sending report"}, status: :unprocessable_entity
+            render :json=>{code:"01", message:"error sending report"}
            end
         else
-            render :json=>{code:"01", message:"account has been suspended"}, status: :unauthorized
+            render :json=>{code:"01", message:"account has been suspended"}
         end
     end
 
@@ -25,10 +25,10 @@ class ReportController < ApplicationController
             if @report.save
              render :json=>{code:"00", message:"report sent successfully. Thank you"}, status: :ok
             else
-             render :json=>{code:"01", message:"error sending report"}, status: :unprocessable_entity
+             render :json=>{code:"01", message:"error sending report"}
             end
          else
-             render :json=>{code:"01", message:"account has been suspended"}, status: :unauthorized
+             render :json=>{code:"01", message:"account has been suspended"}
          end
     end
 

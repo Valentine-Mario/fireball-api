@@ -15,7 +15,7 @@ class VideosController < ApplicationController
                 if @post.save
                     render :json=>{code:"00", message:@post}, status: :ok
                 else
-                    render :json=>{code:"01", message:"error creating post"}, status: :unprocessable_entity
+                    render :json=>{code:"01", message:"error creating post"}
                 end
             else
                 render :json=>{code:"01", message:"only video allowed in this channel"}, status: :ok
@@ -56,10 +56,10 @@ class VideosController < ApplicationController
            if @video.update(editParams)
                 render :json=>{code:"00", message:"video update successul"}, status: :ok
            else
-                render :json=>{code:"01", message:"error editing video"}, status: :unprocessable_entity
+                render :json=>{code:"01", message:"error editing video"}
            end
         else
-            render :json=>{code:"01", message:"account suspended"}, status: :unauthorized
+            render :json=>{code:"01", message:"account suspended"}
         end
     end
 
@@ -68,7 +68,7 @@ class VideosController < ApplicationController
             DeleteJob.perform_later(@video)
             render :json=>{code:"00", message:"video deletion processing"}, status: :ok
         else
-            render :json=>{code:"01", message:"account suspended"}, status: :unauthorized
+            render :json=>{code:"01", message:"account suspended"}
         end
     end
 
@@ -95,7 +95,7 @@ class VideosController < ApplicationController
             @video.increment!(:views, by=1)
             render :json=>{code:"00", message:@video, video:vid_link}.to_json(:include=>[:channel, :user]), status: :ok
         else
-            render :json=>{code:"01", message:"this video has been suspended"}, status: :unauthorized
+            render :json=>{code:"01", message:"this video has been suspended"}
         end
     end
     
