@@ -14,14 +14,14 @@ class PodcastController < ApplicationController
                 if @post.save
                     render :json=>{code:"00", message:@post}, status: :ok
                 else
-                    render :json=>{code:"01", message:"error creating post"}, status: :unprocessable_entity
+                    render :json=>{code:"01", message:"error creating post"}
                 end
             else
                 render :json=>{code:"01", message:"only podcast allowed in this channel"}, status: :ok
             end
         
        else
-        render :json=>{code:"01", message:"account suspended. Unable to add podcast"}, status: :unauthorized
+        render :json=>{code:"01", message:"account suspended. Unable to add podcast"}
        end
     end
 
@@ -57,10 +57,10 @@ class PodcastController < ApplicationController
            if @podcast.update(editParams)
                 render :json=>{code:"00", message:"podcast update successul"}, status: :ok
            else
-                render :json=>{code:"01", message:"error editing modal"}, status: :unprocessable_entity
+                render :json=>{code:"01", message:"error editing modal"}
            end
         else
-            render :json=>{code:"01", message:"account suspended"}, status: :unauthorized
+            render :json=>{code:"01", message:"account suspended"}
         end
     end
 
@@ -70,7 +70,7 @@ class PodcastController < ApplicationController
             DeletepodcastJob.perform_later(@podcast)
             render :json=>{code:"00", message:"podcast deletion processing"}, status: :ok
         else
-            render :json=>{code:"01", message:"account suspended"}, status: :unauthorized
+            render :json=>{code:"01", message:"account suspended"}
         end
     end
 
@@ -90,7 +90,7 @@ class PodcastController < ApplicationController
             pod=rails_blob_url(@podcasts.pod)
             render :json=>{code:"00", message:@podcasts, podcast:pod}.to_json(:include=>[:channel, :user]), status: :ok 
         else
-            render :json=>{code:"01", message:"podcast has been suspeded"}, status: :unauthorized
+            render :json=>{code:"01", message:"podcast has been suspeded"}
         end
     end
 

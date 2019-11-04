@@ -19,10 +19,10 @@ class PodcastreplyController < ApplicationController
                     @podcast_notif.save
                 end
             else
-                render :json=>{code:"01", message:"error creating comment"}, status: :unprocessable_entity
+                render :json=>{code:"01", message:"error creating comment"}
             end
         else
-            render :json=>{code:"01", message:"account has been suspended"}, status: :unauthorized
+            render :json=>{code:"01", message:"account has been suspended"}
         end
     end
 
@@ -31,7 +31,7 @@ class PodcastreplyController < ApplicationController
             @reply.destroy
             render :json=>{code:"00", message:"comment deleted successfully"}, status: :ok
         else
-            render :json=>{code:"01", message:"account has been suspended"}, status: :unauthorized
+            render :json=>{code:"01", message:"account has been suspended"}
         end
     end
 
