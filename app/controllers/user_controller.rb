@@ -63,7 +63,7 @@ class UserController < ApplicationController
     end
 
     def forgotPassword
-        @user = User.find_by_email(params[:email])
+        @user = User.find_by_email(passreset['email'])
         #todo: send mail to user with new password
         if @user == nil
             render :json=>{code:"01", message:"this email does not seem to exist in our DB"}
@@ -71,7 +71,8 @@ class UserController < ApplicationController
             #todo:remove the new password being sent to the client
             @pass=resetPassword
             @user.update(@pass)
-            render :json=>{code:"00", message:"password reset successfully check you email", pass:@pass}, status: :ok
+            ForgorPasswordMailer.forgor_password(@pass, @user)
+            render :json=>{code:"00", message:"Your new password has been sent to your email"}, status: :ok
         end
     end
 
@@ -149,7 +150,7 @@ def findUser
 def user_params
         
     params.permit(
-       :name, :email, :password, :password_confirmation, :isAdmin, :suspended
+       :name, :email, :password, :password_confirmation
       )
 end
 
@@ -168,6 +169,12 @@ def resetPassword
     @a=(0...8).map { (65 + rand(26)).chr }.join
     defaults={password:@a}
     params.permit(:password).reverse_merge(defaults)
+end
+
+def passreset
+    params.permit(
+         :email
+       )
 end
 
 end
