@@ -1,7 +1,8 @@
 class ChannelsController < ApplicationController
     include Rails.application.routes.url_helpers
 
-    before_action :authorize_request, except:[:getChannelOfUser, :getChannelByToken, :getAllChannels]
+    before_action :authorize_request, except:[:getChannelOfUser, :getChannelByToken, :getAllChannels, 
+        :getVideoChannel, :getPodcastChannel, :searchChannel]
     before_action :findUser, only:[:getChannelOfUser]
     before_action :set_post_user, only:[:editChannel, :deleteChannel,
          :getSubscribersToYourChannel, :updateChannelImage]
@@ -45,7 +46,7 @@ class ChannelsController < ApplicationController
 
     def getChannelOfUser
         
-        @channel= Channel.paginate(page: params[:page], per_page: params[:per_page]).where(user_id: @user.id)
+        @channel= Channel.paginate(page: params[:page], per_page: params[:per_page]).where(user_id: @user.id).order("created_at DESC")
         total=@channel.total_entries
         arr=[]
             for i in @channel do
@@ -186,8 +187,7 @@ class ChannelsController < ApplicationController
             render :json=>{code:"01", message:"your account has been suspended"}
         else
            @channel= Channel.where(user_id: @current_user.id, content:2)
-           total=@channel.total_entries
-           render :json=>{code:"00", message:@channel, total:total}, status: :ok
+           render :json=>{code:"00", message:@channel}, status: :ok
         end
     end
 
@@ -196,8 +196,7 @@ class ChannelsController < ApplicationController
             render :json=>{code:"01", message:"your account has been suspended"}
         else
            @channel= Channel.where(user_id: @current_user.id, content:1)
-           total=@channel.total_entries
-           render :json=>{code:"00", message:@channel, total:total}, status: :ok
+           render :json=>{code:"00", message:@channel}, status: :ok
         end
     end
 
