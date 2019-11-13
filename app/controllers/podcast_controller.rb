@@ -88,7 +88,9 @@ class PodcastController < ApplicationController
             end
             @podcasts.increment!(:listens, by=1)
             pod=rails_blob_url(@podcasts.pod)
-            render :json=>{code:"00", message:@podcasts, podcast:pod}.to_json(:include=>[:channel, :user]), status: :ok 
+            @chanel=Channel.find_by!(id: @podcasts.channel_id)
+            @channel_pics=rails_blob_url(@channel.image)
+            render :json=>{code:"00", message:@podcasts, podcast:pod, channel_pics:@channel_pics}.to_json(:include=>[:channel, :user]), status: :ok 
         else
             render :json=>{code:"01", message:"podcast has been suspeded"}
         end

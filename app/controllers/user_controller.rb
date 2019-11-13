@@ -58,7 +58,7 @@ class UserController < ApplicationController
                     render :json=>{code:"00", message:"password updated successfully"}, status: :ok      
                 end
             else
-                render :json=>{code:"00", message:"authorization failed"}
+                render :json=>{code:"01", message:"authorization failed"}
         end
     end
 
