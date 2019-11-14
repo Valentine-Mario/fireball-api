@@ -75,7 +75,13 @@ class ChannelsController < ApplicationController
 
 
     def getChannelByToken
-        render :json=>{code:"00", channel_pics:rails_blob_url(@channel.image) , message:@channel, subscribers:@channel.subscriptions.length}.to_json(:include=>{:user=>{}}), status: :ok
+        if @channel.content==1
+            render :json=>{code:"00", channel_pics:rails_blob_url(@channel.image) , message:@channel, subscribers:@channel.subscriptions.length}.to_json(:include=>[:podcasts, :user]), status: :ok
+
+        else
+            render :json=>{code:"00", channel_pics:rails_blob_url(@channel.image) , message:@channel, subscribers:@channel.subscriptions.length}.to_json(:include=>[:user, :videos]), status: :ok
+
+        end
     end
 
 
