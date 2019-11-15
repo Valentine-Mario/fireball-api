@@ -144,9 +144,9 @@ class ChannelsController < ApplicationController
     def checkSubscription
         @check_sub= Subscription.where(user_id:@current_user.id , channel_id:@channel.id )
         if @check_sub.length>0
-            render :json=>{subscribed:true}, status: :ok
+            render :json=>{subscribed:true, message:@check_sub[0]}, status: :ok
         else
-            render :json=>{subscribed:false}, status: :ok
+            render :json=>{subscribed:false, message:@check_sub[0]}, status: :ok
         end
     end
 
