@@ -12,12 +12,12 @@ class BookmarkController < ApplicationController
             @bookmark_check= VideoBookmark.where(user_id:@current_user.id, video_id:@video.id)
             if @bookmark_check.length>0
                 @bookmark_check[0].destroy
-                render :json=>{code:"00", message:"bookmark removed"}
+                render :json=>{code:"00", message:"bookmark removed", bookmark:false}
             else
                 @bookmark=@video.video_bookmarks.create
                 @bookmark.user_id=@current_user.id
                 if @bookmark.save
-                    render :json=>{code:"00", message:"video bookmarked successfully"}, status: :ok
+                    render :json=>{code:"00", message:"video bookmarked successfully", bookmark:true}, status: :ok
                 else
                     render :json=>{code:"01", message:"error bookmarking video"}
                 end
@@ -59,7 +59,7 @@ class BookmarkController < ApplicationController
 
     def checkVideoBookmark
        @bookmark_true = VideoBookmark.where(user_id:@current_user.id, video_id:@video.id)
-       if @bookmark_true.length>0
+       if @bookmark_true.length > 0
         render :json=>{code:"00", message:true}
        else
         render :json=>{code:"00", message:false}

@@ -28,21 +28,21 @@ class VideosController < ApplicationController
     def getAllVideos
         @videos=Video.paginate(page: params[:page], per_page: params[:per_page]).where(suspended: false).order("created_at DESC")
         total=@videos.total_entries
-        render :json=>{code:"00", message:@videos, total:total}.to_json(:include=>[:channel]), status: :ok
+        render :json=>{code:"00", message:@videos, total:total}.to_json(:include=>[:channel, :user]), status: :ok
     end
 
     def getMostViewed
         @videos=Video.paginate(page: params[:page], per_page: params[:per_page]).where(suspended:false).order(views: :desc)
         total=@videos.total_entries
-        render :json=>{code:"00", message:@videos, total:total}.to_json(:include=>[:channel]), status: :ok
+        render :json=>{code:"00", message:@videos, total:total}, status: :ok
     end
 
     def getVideoFeed
         @sub=Subscription.where(user_id: @current_user.id)
         sub_channel=@sub.map { |h| h[:channel_id] }
-        @videos=Video.paginate(page: params[:page], per_page: params[:per_page]).where(channel_id:sub_channel).order("created_at DESC")
+        @videos=Video.paginate(page: params[:page], per_page: params[:per_page]).where(channel_id:sub_channel, suspended:false).order("created_at DESC")
         total=@videos.total_entries
-        render :json=>{code:"00", message:@videos, total:total}.to_json(:include=>[:channel]), status: :ok
+        render :json=>{code:"00", message:@videos, total:total}.to_json(:include=>[:channel, :user]), status: :ok
     end
 
 
@@ -75,7 +75,7 @@ class VideosController < ApplicationController
     def searchVideo
         @videos = Video.paginate(page: params[:page], per_page: params[:per_page]).where("title LIKE ? OR description LIKE ?", "%#{params[:any]}%", "%#{params[:any]}%").where(suspended: false).order("created_at DESC")
         @total=@videos.total_entries
-        render :json=>{code:"00", message:@videos, total:@total}.to_json(:include=>[:channel]), status: :ok
+        render :json=>{code:"00", message:@videos, total:@total}.to_json(:include=>[:channel, :user]), status: :ok
     end
 
 
