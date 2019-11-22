@@ -41,7 +41,7 @@ class PodcastController < ApplicationController
     def PodcastFeed
         @sub=Subscription.where(user_id: @current_user.id)
         sub_channel=@sub.map { |h| h[:channel_id] }
-        @podcast=Podcast.paginate(page: params[:page], per_page: params[:per_page]).where(channel_id:sub_channel).order("created_at DESC")
+        @podcast=Podcast.paginate(page: params[:page], per_page: params[:per_page]).where(channel_id:sub_channel, suspended:false).order("created_at DESC")
         total=@podcast.total_entries
         render :json=>{code:"00", message:@podcast, total:total}.to_json(:include=>[:channel]), status: :ok
     end

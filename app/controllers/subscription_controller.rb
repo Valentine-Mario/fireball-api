@@ -13,7 +13,7 @@ class SubscriptionController < ApplicationController
                 @sub.user_id=@current_user.id
                 @sub.save
             
-                render :json=>{code:"00", message:"subscription to "+@channel.name+" successful"}, status: :ok
+                render :json=>{code:"00", message:"subscription to "+@channel.name+" successful", sub:@sub}, status: :ok
             end
 
         else
