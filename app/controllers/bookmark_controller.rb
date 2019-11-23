@@ -23,7 +23,7 @@ class BookmarkController < ApplicationController
                 end
             end
         else
-            render :json=>{code:"01", message:"account has been suspended"}, status: :unauthorized
+            render :json=>{code:"01", message:"account has been suspended"},
         end
     end
 
@@ -32,12 +32,12 @@ class BookmarkController < ApplicationController
             @bookmark_check= PodcastBookmark.where(user_id:@current_user.id, podcast_id:@podcast.id)
             if @bookmark_check.length>0
                 @bookmark_check[0].destroy
-                render :json=>{code:"00", message:"bookmark removed"}
+                render :json=>{code:"00", message:"bookmark removed", bookmark:false}
             else
                 @bookmark=@podcast.podcast_bookmarks.create
                 @bookmark.user_id=@current_user.id
                 if @bookmark.save
-                    render :json=>{code:"00", message:"podcast bookmarked successfully"}, status: :ok
+                    render :json=>{code:"00", message:"podcast bookmarked successfully", bookmark:true}, status: :ok
                 else
                     render :json=>{code:"01", message:"error bookmarking video"}
                 end
@@ -48,13 +48,15 @@ class BookmarkController < ApplicationController
     end
 
     def UserVideoBookmarks
-        @bookmarks=@current_user.video_bookmarks
-        render :json=>{code:"00", message:@bookmarks}.to_json(:include=>[:video]), status: :ok
+        @bookmarks=@current_user.video_bookmarks.paginate(page: params[:page], per_page: params[:per_page]).order("created_at DESC")
+        total=@bookmarks.total_entries
+        render :json=>{code:"00", message:@bookmarks, total:total}.to_json(:include=>[:video]), status: :ok
     end
 
     def UserPodcastBookmarks
-        @bookmarks=@current_user.podcast_bookmarks
-        render :json=>{code:"00", message:@bookmarks}.to_json(:include=>[:podcast]), status: :ok
+        @bookmarks=@current_user.podcast_bookmarks.paginate(page: params[:page], per_page: params[:per_page]).order("created_at DESC")
+        total=@bookmarks.total_entries
+        render :json=>{code:"00", message:@bookmarks, total:total}.to_json(:include=>[:podcast]), status: :ok
     end
 
     def checkVideoBookmark
@@ -69,7 +71,7 @@ class BookmarkController < ApplicationController
 
     def checkPodcastBookmark
         @bookmark_true= PodcastBookmark.where(user_id:@current_user.id, podcast_id:@podcast.id)
-            if @bookmark_true.length>0
+            if @bookmark_true.length > 0
                 render :json=>{code:"00", message:true}
             else
                 render :json=>{code:"00", message:false}
