@@ -27,13 +27,13 @@ class PodcastController < ApplicationController
 
 
     def getAllPodcast
-        @podcasts=Podcast.paginate(page: params[:page], per_page: params[:per_page]).where(suspended: false)
+        @podcasts=Podcast.paginate(page: params[:page], per_page: params[:per_page]).where(suspended: false).order("created_at DESC")
         total=@podcasts.total_entries
-        render :json=>{code:"00", message:@podcasts, total:total}.to_json(:include=>[:channel]), status: :ok
+        render :json=>{code:"00", message:@podcasts, total:total}.to_json(:include=>[:channel, :user]), status: :ok
     end
 
     def getMostListens
-        @podcast=Podcast.paginate(page: params[:page], per_page: params[:per_page]).where(suspended:false).order(views: :listens)
+        @podcast=Podcast.paginate(page: params[:page], per_page: params[:per_page]).where(suspended:false).order(listens: :desc)
         total=@podcast.total_entries
         render :json=>{code:"00", message:@podcast, total:total}.to_json(:include=>[:channel]), status: :ok
     end
@@ -43,7 +43,7 @@ class PodcastController < ApplicationController
         sub_channel=@sub.map { |h| h[:channel_id] }
         @podcast=Podcast.paginate(page: params[:page], per_page: params[:per_page]).where(channel_id:sub_channel, suspended:false).order("created_at DESC")
         total=@podcast.total_entries
-        render :json=>{code:"00", message:@podcast, total:total}.to_json(:include=>[:channel]), status: :ok
+        render :json=>{code:"00", message:@podcast, total:total}.to_json(:include=>[:channel, :user]), status: :ok
     end
 
     def getPodCastInChannel
@@ -88,7 +88,7 @@ class PodcastController < ApplicationController
             end
             @podcasts.increment!(:listens, by=1)
             pod=rails_blob_url(@podcasts.pod)
-            @chanel=Channel.find_by!(id: @podcasts.channel_id)
+            @channel=@podcasts.channel
             @channel_pics=rails_blob_url(@channel.image)
             render :json=>{code:"00", message:@podcasts, podcast:pod, channel_pics:@channel_pics}.to_json(:include=>[:channel, :user]), status: :ok 
         else
@@ -108,9 +108,9 @@ class PodcastController < ApplicationController
 
 
     def searchPodcast
-        @podcasts = Podcast.paginate(page: params[:page], per_page: params[:per_page]).where("title LIKE ? OR desciption LIKE ?", "%#{params[:any]}%", "%#{params[:any]}%").where(suspended: false).order("created_at DESC")
+        @podcasts = Podcast.paginate(page: params[:page], per_page: params[:per_page]).where("lower(title) LIKE ? OR lower(desciption) LIKE ?", "%#{params[:any].downcase}%", "%#{params[:any].downcase}%").where(suspended: false).order("created_at DESC")
         @total=@podcasts.total_entries
-        render :json=>{code:"00", message:@podcasts, total:@total}.to_json(:include=>[:channel]), status: :ok
+        render :json=>{code:"00", message:@podcasts, total:@total}.to_json(:include=>[:channel, :user]), status: :ok
     end
     
 
