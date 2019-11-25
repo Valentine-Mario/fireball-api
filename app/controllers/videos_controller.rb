@@ -73,7 +73,7 @@ class VideosController < ApplicationController
     end
 
     def searchVideo
-        @videos = Video.paginate(page: params[:page], per_page: params[:per_page]).where("title LIKE ? OR description LIKE ?", "%#{params[:any]}%", "%#{params[:any]}%").where(suspended: false).order("created_at DESC")
+        @videos = Video.paginate(page: params[:page], per_page: params[:per_page]).where("lower(title) LIKE ? OR lower(description) LIKE ?", "%#{params[:any].downcase}%", "%#{params[:any].downcase}%").where(suspended: false).order("created_at DESC")
         @total=@videos.total_entries
         render :json=>{code:"00", message:@videos, total:@total}.to_json(:include=>[:channel, :user]), status: :ok
     end

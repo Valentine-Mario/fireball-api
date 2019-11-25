@@ -23,7 +23,7 @@ class BookmarkController < ApplicationController
                 end
             end
         else
-            render :json=>{code:"01", message:"account has been suspended"},
+            render :json=>{code:"01", message:"account has been suspended"}
         end
     end
 

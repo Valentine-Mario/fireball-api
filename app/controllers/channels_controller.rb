@@ -118,7 +118,7 @@ class ChannelsController < ApplicationController
 
 
     def searchChannel
-        @channels = Channel.paginate(page: params[:page], per_page: params[:per_page]).where("name LIKE ? OR description LIKE ?", "%#{params[:any]}%", "%#{params[:any]}%").order("created_at DESC")
+        @channels = Channel.paginate(page: params[:page], per_page: params[:per_page]).where("lower(name) LIKE ? OR lower(description) LIKE ?", "%#{params[:any].downcase}%", "%#{params[:any].downcase}%").order("created_at DESC")
         @total=@channels.total_entries
         arr=[]
             for i in @channels do
