@@ -4,6 +4,7 @@ class PodcastController < ApplicationController
     before_action :getChannel, only:[:addPodcast]
     before_action :findChannelByToken, only:[:getPodCastInChannel]
     before_action :getPodcast, only:[:editPodcast, :deletePodcast, :viewListenHistory]
+    before_action :update_time, only:[:ListenToPodcast]
 
     def addPodcast
        if @current_user.suspended==false
@@ -81,6 +82,7 @@ class PodcastController < ApplicationController
             @podcast_history=Podcasthistory.where(user_id:@current_user.id, podcast_id:@podcasts.id)
             if @podcast_history.length>0
                 @podcast_history[0].increment!(:listens, by=1)
+                @podcast_history.update(update_time)
             else
                 @pod_history=@podcasts.podcasthistories.create 
                 @pod_history.user_id=@current_user.id
@@ -100,7 +102,7 @@ class PodcastController < ApplicationController
         if @current_user.suspended==false
             history= @podcast.podcasthistories.paginate(page: params[:page], per_page: params[:per_page])
             total=history.total_entries
-            render :json=>{code:"00", message:history, total:total}.to_json(:include=>[:user]), status: :ok
+            render :json=>{code:"00", message:history, total:total}.to_json(:include=>[:user]).order("updated_at DESC"), status: :ok
         else
             render :json=>{code:"01", message:"account suspended"}, status: :ok
         end
@@ -137,4 +139,12 @@ class PodcastController < ApplicationController
       def getPodcast
           @podcast= @current_user.podcasts.find_by!(id: params[:id]) if @current_user
       end
+
+      def update_time
+        defaults={updated_at:DateTime.now}
+
+        params.permit(
+            :updated_at
+        ).reverse_merge(defaults)
+    end
 end

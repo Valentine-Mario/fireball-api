@@ -15,7 +15,6 @@ Rails.application.routes.draw do
     get '/video/history', :to=>'user#getVideoHostory'
     get '/notifvideo', :to=>'user#getNotificationVideo'
     get '/notifpodcast', :to=>'user#getNotificationPodcast'
-    get '/notilength', :to=>'user#getNotificationLength'
     get '/userpodcastvideolength', :to=>'user#LengthOfUserVideoPodcast'
   end
 
