@@ -4,7 +4,7 @@ class VideosController < ApplicationController
     before_action :getChannel, only:[:createVideo]
     before_action :findChannelByToken, only:[:getVideoInChannel]
     before_action :getVideo, only:[:editVideo, :deleteVideo, :getViewHistory]
-
+    before_action :update_time, only:[:getVideoByToken]
     def createVideo
         if @current_user.suspended==false
             if @channel.content == 2
@@ -86,6 +86,8 @@ class VideosController < ApplicationController
             @video_history=Videohistory.where(user_id:@current_user.id, video_id:@video.id)
             if @video_history.length>0
                 @video_history[0].increment!(:viewed, by=1)
+                @video_history.update(update_time)
+
             else
                 @vid_history=@video.videohistories.create 
                 @vid_history.user_id=@current_user.id
@@ -104,7 +106,7 @@ class VideosController < ApplicationController
         if @current_user.suspended==false
             history= @video.videohistories.paginate(page: params[:page], per_page: params[:per_page])
             total=history.total_entries
-            render :json=>{code:"00", message:history, total:total}.to_json(:include=>[:user]), status: :ok
+            render :json=>{code:"00", message:history, total:total}.to_json(:include=>[:user]).order("updated_at DESC"), status: :ok
         else
             render :json=>{code:"01", message:"account suspended"}, status: :ok
         end
@@ -137,5 +139,13 @@ class VideosController < ApplicationController
 
     def getVideo
         @video= @current_user.videos.find_by!(id: params[:id]) if @current_user
+    end
+
+    def update_time
+        defaults={updated_at:DateTime.now}
+
+        params.permit(
+            :updated_at
+        ).reverse_merge(defaults)
     end
 end
