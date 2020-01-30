@@ -118,14 +118,14 @@ class UserController < ApplicationController
         @video_notification= VideoNotification.where(user_id:@current_user.id).paginate(page: params[:page], per_page: params[:per_page]).order("updated_at DESC") 
         total=@video_notification.total_entries
         render :json=>{code:"00", message:@video_notification, total:total}.to_json(:include=>[:video]), status: :ok
-        VideoNotification.where(user_id:@current_user.id, viewed:false).update_all(viewed: true) 
+        VideoNotification.where(user_id:@current_user.id, viewed:false).paginate(page: params[:page], per_page: params[:per_page]).update_all(viewed: true) 
     end
 
     def getNotificationPodcast
         @podcast_notification= PodcastNotification.where(user_id:@current_user.id).paginate(page: params[:page], per_page: params[:per_page]).order("created_at DESC")
         total=@podcast_notification.total_entries
         render :json=>{code:"00", message:@podcast_notification, total:total}.to_json(:include=>[:podcast]), status: :ok
-        PodcastNotification.where(user_id:@current_user.id, viewed:false).update_all(viewed: true)   
+        PodcastNotification.where(user_id:@current_user.id, viewed:false).paginate(page: params[:page], per_page: params[:per_page]).update_all(viewed: true)   
     end
 
     def getNotificationLength
