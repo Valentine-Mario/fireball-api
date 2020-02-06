@@ -32,16 +32,9 @@ class User < ApplicationRecord
                     length: { minimum: 6 },
                     if: -> { new_record? || !password.nil? }
             validates_presence_of :name, presence: true
-            validates :avatar, attached: true, content_type: ['image/png', 'image/jpg', 'image/jpeg']
-        private
-        def set_token
-          self.token=generate_token
-        end
+            validates :avatar, attached: true, content_type: ['image/png', 'image/jpg', 'image/jpeg'] 
+            validates :avatar, size:{less_than: 3.megabyte}
 
-        def generate_token
-          loop do
-            token = SecureRandom.hex(10)
-            break token unless User.where(token:token).exists?
-          end
-        end
+        private
+       
 end

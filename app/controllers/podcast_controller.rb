@@ -15,7 +15,7 @@ class PodcastController < ApplicationController
                 if @post.save
                     render :json=>{code:"00", message:@post}, status: :ok
                 else
-                    render :json=>{code:"01", message:"error creating post"}
+                    render :json=>{code:"01", message:"error creating post please ensure the podcast is less than 50 MB"}
                 end
             else
                 render :json=>{code:"01", message:"only podcast allowed in this channel"}, status: :ok
