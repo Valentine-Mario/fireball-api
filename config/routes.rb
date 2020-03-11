@@ -128,6 +128,7 @@ Rails.application.routes.draw do
     get 'unsuspendpodcast/:id', :to=>'uploads#unsuspend_podcast'
     get '/videoreport/:token', :to=>'reports#getVideoReport'
     get '/podcastreport/:token', :to=>'reports#getPodcastReport'
+    get '/search/user/:any', :to=>'admin#SearchUser'
   end
 
 end

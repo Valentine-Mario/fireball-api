@@ -5,7 +5,7 @@ class Admin::AdminController < ApplicationController
 
     def makeAdmin
         if @current_user.isAdmin==false
-            render :json=>{code:"01", message:"unauthorised to make user admin"}, status: :unauthorised
+            render :json=>{code:"01", message:"unauthorised to make user admin"}
         else
             if @user.isAdmin==true
                 render :json=>{code:"00", message:@user.name+" is already an admin"}, status: :ok
@@ -18,7 +18,7 @@ class Admin::AdminController < ApplicationController
 
     def removeAdmin
         if @current_user.isAdmin==false
-            render :json=>{code:"01", message:"unauthorised to remove admin"}, status: :unauthorised
+            render :json=>{code:"01", message:"unauthorised to remove admin"}
         else
             if @user.isAdmin==false
                 render :json=>{code:"00", message:@user.name+" is not an admin"}, status: :ok
@@ -31,7 +31,7 @@ class Admin::AdminController < ApplicationController
 
     def getAllUsers
         if @current_user.isAdmin==false
-            render :json=>{code:"01", message:"unauthorised to view list of all users"}, status: :unauthorised
+            render :json=>{code:"01", message:"unauthorised to view list of all users"}
         else
             @users= User.paginate(page: params[:page], per_page: params[:per_page]).order("created_at DESC")
             @total=@users.total_entries
@@ -39,9 +39,19 @@ class Admin::AdminController < ApplicationController
         end
     end
 
+    def SearchUser
+        if @current_user.isAdmin==true
+            @user = User.paginate(page: params[:page], per_page: params[:per_page]).where("lower(name) LIKE ? OR lower(email) LIKE ?", "%#{params[:any].downcase}%", "%#{params[:any].downcase}%").order("created_at DESC")
+            @total=@user.total_entries
+            render :json=>{code:"00", message:@user, total:@total}, status: :ok
+        else
+            render :json=>{code:"01", message:"unauthorized to access this route"}
+        end
+    end
+
     def suspendUser
         if @current_user.isAdmin==false
-            render :json=>{code:"01", message:"unauthorised to suspend user"}, status: :unauthorised
+            render :json=>{code:"01", message:"unauthorised to suspend user"}
         else
             if @user.suspended==true
                 render :json=>{code:"01", message:@user.name+" is already suspended"}, status: :ok
@@ -54,7 +64,7 @@ class Admin::AdminController < ApplicationController
 
     def unsuspendUser
         if @current_user.isAdmin==false
-            render :json=>{code:"01", message:"unauthorised to suspend user"}, status: :unauthorised
+            render :json=>{code:"01", message:"unauthorised to suspend user"}
         else
             if @user.suspended==false
                 render :json=>{code:"01", message:@user.name+" is not suspended"}, status: :ok
