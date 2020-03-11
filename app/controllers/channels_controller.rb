@@ -20,7 +20,7 @@ class ChannelsController < ApplicationController
             if @channel.save
                 render :json=>{code:"00", message:"channel created successfully", channel:@channel}, status: :ok
             else
-                render :json=>{code:"01", message:"error creating channel"}
+                render :json=>{code:"01", message:"error creating channel be sure the channel has a cover image of less than 3 mb"}
             end
         end
     end

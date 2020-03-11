@@ -31,7 +31,7 @@ class UserController < ApplicationController
             if  @current_user.avatar.attach(params[:avatar])
                 render :json=>{code:"00", message:"profile picture uploaded successfully"}, status: :ok
             else
-                render :json=>{code:"01", message:"error uploading picture"}
+                render :json=>{code:"01", message:"error uploading picture make sure image is less than 3 mb"}
             end
         else
             render :json=>{code:"01", message:"account suspended"}

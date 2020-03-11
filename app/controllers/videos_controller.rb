@@ -1,3 +1,4 @@
+
 class VideosController < ApplicationController
     include Rails.application.routes.url_helpers
     before_action :authorize_request, only:[:createVideo, :editVideo, :deleteVideo, :getVideoByToken, :getViewHistory, :getVideoFeed]
@@ -15,7 +16,7 @@ class VideosController < ApplicationController
                 if @post.save
                     render :json=>{code:"00", message:@post}, status: :ok
                 else
-                    render :json=>{code:"01", message:"error creating post"}
+                    render :json=>{code:"01", message:"error creating post please ensure the video is less than 100 MB"}
                 end
             else
                 render :json=>{code:"01", message:"only video allowed in this channel"}, status: :ok
