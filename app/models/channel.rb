@@ -3,7 +3,7 @@ class Channel < ApplicationRecord
   has_secure_token :token_channel
   has_one_attached :image
   validates :image, attached: true, content_type: ['image/png', 'image/jpg', 'image/jpeg']
-  validates :pod, size:{less_than: 3.megabyte}
+  validates :image, size:{less_than: 3.megabyte}
   validates :content, numericality: { only_integer: true }
   validates :name, presence: true
   validates :description, presence:true
