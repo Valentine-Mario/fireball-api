@@ -1,7 +1,7 @@
 class Admin::AdminController < ApplicationController
     include Rails.application.routes.url_helpers
     before_action :authorize_request
-    before_action :findUser, except:[:getAllUsers]
+    before_action :findUser, except:[:getAllUsers, :SearchUser]
 
     def makeAdmin
         if @current_user.isAdmin==false
@@ -40,7 +40,7 @@ class Admin::AdminController < ApplicationController
     end
 
     def SearchUser
-        if @current_user.isAdmin==true
+         if @current_user.isAdmin==true
             @user = User.paginate(page: params[:page], per_page: params[:per_page]).where("lower(name) LIKE ? OR lower(email) LIKE ?", "%#{params[:any].downcase}%", "%#{params[:any].downcase}%").order("created_at DESC")
             @total=@user.total_entries
             render :json=>{code:"00", message:@user, total:@total}, status: :ok
