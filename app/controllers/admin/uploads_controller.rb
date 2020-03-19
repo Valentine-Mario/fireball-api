@@ -56,6 +56,7 @@ class Admin::UploadsController < ApplicationController
             @podcasts= Podcast.find_by_token!(params[:token])
       
             pod=rails_blob_url(@podcasts.pod)
+            @channel=@podcasts.channel
             @channel_pics=rails_blob_url(@channel.image)
             render :json=>{code:"00", message:@podcasts, podcast:pod}.to_json(:include=>[:channel, :user]), status: :ok 
         end
