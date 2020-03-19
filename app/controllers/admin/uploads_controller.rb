@@ -23,12 +23,8 @@ class Admin::UploadsController < ApplicationController
 
     def getVideoByToken
         @video= Video.find_by_token!(params[:token])
-        if @video.suspended==false
             vid_link=rails_blob_url(@video.vid)
             render :json=>{code:"00", message:@video, video:vid_link}.to_json(:include=>[:channel, :user]), status: :ok
-        else
-            render :json=>{code:"01", message:"this video has been suspended"}
-        end
     end
 
     def suspend_podcast
@@ -51,13 +47,11 @@ class Admin::UploadsController < ApplicationController
 
     def ListenToPodcast
        @podcasts= Podcast.find_by_token!(params[:token])
-       if @podcast.suspended==false
+      
             pod=rails_blob_url(@podcasts.pod)
             @channel_pics=rails_blob_url(@channel.image)
             render :json=>{code:"00", message:@podcasts, podcast:pod}.to_json(:include=>[:channel, :user]), status: :ok 
-        else
-            render :json=>{code:"01", message:"podcast has been suspeded"}
-        end
+       
     end
 
     private
