@@ -129,8 +129,12 @@ Rails.application.routes.draw do
     get '/videoreport/:token', :to=>'reports#getVideoReport'
     get '/podcastreport/:token', :to=>'reports#getPodcastReport'
     get '/search/user/:any', :to=>'admin#SearchUser'
-    get '/getvideo/:token', :to=>'admin#getVideoByToken'
-    get '/getpocast/:token', :to=>"admin#ListenToPodcast"
+    get '/getvideo/:token', :to=>'uploads#getVideoByToken'
+    get '/getpocast/:token', :to=>"uploads#ListenToPodcast"
+    get '/getallvideos', :to=>"uploads#getAllVideos"
+    get '/searchvideo/:any', :to=>"uploads#searchVideo"
+    get '/getallpodcast', :to=>"uploads#getAllPodcast"
+    get 'searchpodcast/:any', :to=>"uploads#searchPodcast"
   end
 
 end
