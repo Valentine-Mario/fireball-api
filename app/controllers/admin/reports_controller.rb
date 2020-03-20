@@ -8,7 +8,7 @@ class Admin::ReportsController < ApplicationController
         if @current_user.isAdmin==false
             render :json=>{code:"01", message:"only admin allowed to access this route"}, staus: :unauthorised    
         else
-            reports=@video.report_videos.paginate(page: params[:page], per_page: params[:per_page])
+            reports=@video.report_videos.paginate(page: params[:page], per_page: params[:per_page]).order("created_at DESC")
             total=reports.total_entries
             render :json=>{code:"00", message:reports, total:total}.to_json(:include=>[:user]), staus: :ok
         end
@@ -19,7 +19,7 @@ class Admin::ReportsController < ApplicationController
         if @current_user.isAdmin==false
             render :json=>{code:"01", message:"only admin allowed to access this route"}, staus: :unauthorised
         else
-            reports=@podcast.report_podcasts.paginate(page: params[:page], per_page: params[:per_page])
+            reports=@podcast.report_podcasts.paginate(page: params[:page], per_page: params[:per_page]).order("created_at DESC")
             total=reports.total_entries
             render :json=>{code:"00", message:reports, total:total}.to_json(:include=>[:user]), staus: :ok
         end

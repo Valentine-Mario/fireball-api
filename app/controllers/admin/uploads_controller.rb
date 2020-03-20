@@ -1,4 +1,5 @@
 class Admin::UploadsController < ApplicationController
+    include Rails.application.routes.url_helpers
     before_action :authorize_request
     before_action :getVideo, only:[:suspend_video, :unsuspend_video]
     before_action :getPodcast, only:[:suspend_podcast, :unsuspend_podcast]
@@ -58,7 +59,7 @@ class Admin::UploadsController < ApplicationController
             pod=rails_blob_url(@podcasts.pod)
             @channel=@podcasts.channel
             @channel_pics=rails_blob_url(@channel.image)
-            render :json=>{code:"00", message:@podcasts, podcast:pod}.to_json(:include=>[:channel, :user]), status: :ok 
+            render :json=>{code:"00", message:@podcasts, podcast:pod, channel_pics:@channel_pics}.to_json(:include=>[:channel, :user]), status: :ok 
         end
        
     end
