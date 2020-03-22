@@ -134,7 +134,7 @@ Rails.application.routes.draw do
     get '/getallvideos', :to=>"uploads#getAllVideos"
     get '/searchvideo/:any', :to=>"uploads#searchVideo"
     get '/getallpodcast', :to=>"uploads#getAllPodcast"
-    get 'searchpodcast/:any', :to=>"uploads#searchPodcast"
+    get '/searchpodcast/:any', :to=>"uploads#searchPodcast"
   end
 
 end
