@@ -3,7 +3,7 @@ class User < ApplicationRecord
    has_one_attached :avatar
         has_secure_password
         after_initialize :set_defaults, unless: :persisted?
-        before_create :set_token
+        
         def set_defaults
             self.isAdmin = false
             self.suspended = false
