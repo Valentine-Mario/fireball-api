@@ -1,1 +1,1 @@
-worker: bundle exec sidekiq -c config/sidekiq.yml 5 -v -q default
+worker: bundle exec sidekiq -c 5 -v
