@@ -35,11 +35,17 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
-  gem 'bcrypt', git: 'https://github.com/codahale/bcrypt-ruby.git', :require => 'bcrypt'
+  #gem 'bcrypt', git: 'https://github.com/codahale/bcrypt-ruby.git', :require => 'bcrypt'
+  gem 'bcrypt', '~> 3.1', '>= 3.1.11'
   gem 'jwt'
   gem "aws-sdk-s3", require: false
   gem 'will_paginate', '~> 3.1.0'
-
+  gem 'has_secure_token'
+  gem 'active_storage_validations'
+  gem 'mini_magick', '>= 4.9.5'
+  gem 'sidekiq'
+  gem 'redis'
+  gem 'rack-cors'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
